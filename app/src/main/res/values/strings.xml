@@ -6,4 +6,15 @@
     <string name="menu_profile">Profile</string>
     <string name="menu_settings">Settings</string>
     <string name="menu_back">Back</string>
+    <string name="landing_welcome">Welcome to Nutriscan, where scanning a barcode is the easiest step to a healthier you</string>
+    <string name="get_started">Get Started</string>
+    <string name="login">Login</string>
+    <string name="signup">Sign Up</string>
+    <string name="create_account">Create Account</string>
+    <string name="email">Email</string>
+    <string name="username">Username</string>
+    <string name="password">Password</string>
+    <string name="new_to_nutrifacts">New to Nutrifacts?</string>
+    <string name="not_new_to_nutrifacts">Already have an account?</string>
+    <string name="agree_to_terms">I agree to terms and conditions</string>
 </resources>

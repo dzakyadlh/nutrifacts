@@ -38,7 +38,10 @@ import com.nutrifacts.app.ui.navigation.NavigationItem
 import com.nutrifacts.app.ui.navigation.Screen
 import com.nutrifacts.app.ui.screen.history.HistoryScreen
 import com.nutrifacts.app.ui.screen.home.HomeScreen
+import com.nutrifacts.app.ui.screen.landing.LandingScreen
+import com.nutrifacts.app.ui.screen.login.LoginScreen
 import com.nutrifacts.app.ui.screen.search.SearchScreen
+import com.nutrifacts.app.ui.screen.signup.SignupScreen
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -47,7 +50,7 @@ fun NutrifactsApp(
     navController: NavHostController = rememberNavController()
 ) {
     val isLogin = remember {
-        mutableStateOf(true)
+        mutableStateOf(false)
     }
     Scaffold(
         topBar = {
@@ -63,6 +66,22 @@ fun NutrifactsApp(
             startDestination = if (isLogin.value) Screen.Home.route else Screen.Landing.route,
             modifier = Modifier.padding(innerPadding)
         ) {
+            composable(Screen.Landing.route) {
+                LandingScreen(navigateToLogin = {
+                    navController.navigate(
+                        Screen.Login.route
+                    )
+                })
+            }
+            composable(Screen.Login.route) {
+                LoginScreen(
+                    navigateToSignup = { navController.navigate(Screen.Signup.route) },
+                    navigateToHome = { navController.navigate(Screen.Home.route) })
+            }
+            composable(Screen.Signup.route) {
+                SignupScreen(
+                    navigateToLogin = { navController.navigate(Screen.Login.route) })
+            }
             composable(Screen.Home.route) {
                 HomeScreen()
             }
@@ -86,42 +105,46 @@ fun TopAppBar(
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarState())
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
-    androidx.compose.material3.TopAppBar(
-        title = {
-            Text(text = currentRoute.toString(), maxLines = 1, overflow = TextOverflow.Ellipsis)
-        },
-        navigationIcon = {
-            if (currentRoute == Screen.Profile.route || currentRoute == Screen.Settings.route) {
-                IconButton(onClick = { navController.navigateUp() }) {
+    if (currentRoute != Screen.Landing.route && currentRoute != Screen.Login.route && currentRoute != Screen.Signup.route) {
+        androidx.compose.material3.TopAppBar(
+            title = {
+                Text(text = currentRoute.toString(), maxLines = 1, overflow = TextOverflow.Ellipsis)
+            },
+            navigationIcon = {
+                if (currentRoute == Screen.Profile.route || currentRoute == Screen.Settings.route) {
+                    IconButton(onClick = { navController.navigateUp() }) {
+                        Icon(
+                            imageVector = Icons.Default.ArrowBack,
+                            contentDescription = stringResource(
+                                R.string.menu_back
+                            )
+                        )
+                    }
+                }
+            },
+            actions = {
+                IconButton(onClick = { }) {
                     Icon(
-                        imageVector = Icons.Default.ArrowBack, contentDescription = stringResource(
-                            R.string.menu_back
+                        imageVector = Icons.Default.AccountCircle,
+                        contentDescription = stringResource(
+                            R.string.menu_profile
                         )
                     )
                 }
-            }
-        },
-        actions = {
-            IconButton(onClick = { }) {
-                Icon(
-                    imageVector = Icons.Default.AccountCircle, contentDescription = stringResource(
-                        R.string.menu_profile
+                IconButton(onClick = {}) {
+                    Icon(
+                        imageVector = Icons.Default.Settings,
+                        contentDescription = stringResource(R.string.menu_settings)
                     )
-                )
-            }
-            IconButton(onClick = {}) {
-                Icon(
-                    imageVector = Icons.Default.Settings,
-                    contentDescription = stringResource(R.string.menu_settings)
-                )
 
-            }
-        },
-        scrollBehavior = scrollBehavior,
-        modifier = modifier
-            .background(color = MaterialTheme.colorScheme.surface)
-            .shadow(1.dp)
-    )
+                }
+            },
+            scrollBehavior = scrollBehavior,
+            modifier = modifier
+                .background(color = MaterialTheme.colorScheme.surface)
+                .shadow(1.dp)
+        )
+    }
 }
 
 @Composable
@@ -129,45 +152,47 @@ private fun BottomAppBar(
     navController: NavHostController,
     modifier: Modifier = Modifier,
 ) {
-    NavigationBar(modifier = modifier) {
-        val navBackStackEntry by navController.currentBackStackEntryAsState()
-        val currentRoute = navBackStackEntry?.destination?.route
-        val navigationItems = listOf(
-            NavigationItem(
-                title = stringResource(R.string.menu_home),
-                icon = Icons.Default.Home,
-                screen = Screen.Home
-            ),
-            NavigationItem(
-                title = stringResource(R.string.menu_search),
-                icon = Icons.Default.Search,
-                screen = Screen.Search
-            ),
-            NavigationItem(
-                title = stringResource(R.string.menu_history),
-                icon = Icons.Default.List,
-                screen = Screen.History
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
+    val currentRoute = navBackStackEntry?.destination?.route
+    if (currentRoute != Screen.Landing.route && currentRoute != Screen.Login.route && currentRoute != Screen.Signup.route) {
+        NavigationBar(modifier = modifier) {
+            val navigationItems = listOf(
+                NavigationItem(
+                    title = stringResource(R.string.menu_home),
+                    icon = Icons.Default.Home,
+                    screen = Screen.Home
+                ),
+                NavigationItem(
+                    title = stringResource(R.string.menu_search),
+                    icon = Icons.Default.Search,
+                    screen = Screen.Search
+                ),
+                NavigationItem(
+                    title = stringResource(R.string.menu_history),
+                    icon = Icons.Default.List,
+                    screen = Screen.History
+                )
             )
-        )
-        navigationItems.map { item ->
-            NavigationBarItem(
-                icon = {
-                    Icon(
-                        imageVector = item.icon,
-                        contentDescription = item.title
-                    )
-                },
-                selected = currentRoute == item.screen.route,
-                onClick = {
-                    navController.navigate(item.screen.route) {
-                        popUpTo(navController.graph.findStartDestination().id) {
-                            saveState = true
+            navigationItems.map { item ->
+                NavigationBarItem(
+                    icon = {
+                        Icon(
+                            imageVector = item.icon,
+                            contentDescription = item.title
+                        )
+                    },
+                    selected = currentRoute == item.screen.route,
+                    onClick = {
+                        navController.navigate(item.screen.route) {
+                            popUpTo(navController.graph.findStartDestination().id) {
+                                saveState = true
+                            }
+                            restoreState = true
+                            launchSingleTop = true
                         }
-                        restoreState = true
-                        launchSingleTop = true
                     }
-                }
-            )
+                )
+            }
         }
     }
 }
