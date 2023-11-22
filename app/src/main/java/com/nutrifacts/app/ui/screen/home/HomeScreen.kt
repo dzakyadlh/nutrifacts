@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -58,11 +59,12 @@ private fun NewsCard(modifier: Modifier = Modifier) {
 //                modifier = modifier.fillMaxSize()
 //            )
             Column(modifier = modifier.padding(all = 16.dp)) {
-                Text(text = "Title")
-                Text(text = "Source")
+                Text(text = "Title", style = MaterialTheme.typography.titleSmall)
+                Text(text = "Source", style = MaterialTheme.typography.bodySmall)
             }
             Text(
                 text = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor",
+                style = MaterialTheme.typography.bodyMedium,
                 modifier = modifier.padding(horizontal = 16.dp)
             )
         }

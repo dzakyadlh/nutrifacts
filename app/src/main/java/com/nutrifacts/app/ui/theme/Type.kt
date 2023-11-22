@@ -60,6 +60,12 @@ val Typography = Typography(
         fontSize = 20.sp,
         lineHeight = 35.sp,
     ),
+    titleSmall = TextStyle(
+        fontFamily = fontFamily,
+        fontWeight = FontWeight.SemiBold,
+        fontSize = 18.sp,
+        lineHeight = 35.sp,
+    ),
     labelMedium = TextStyle(
         fontFamily = fontFamily,
         fontWeight = FontWeight.SemiBold,

@@ -40,6 +40,7 @@ import com.nutrifacts.app.ui.screen.history.HistoryScreen
 import com.nutrifacts.app.ui.screen.home.HomeScreen
 import com.nutrifacts.app.ui.screen.landing.LandingScreen
 import com.nutrifacts.app.ui.screen.login.LoginScreen
+import com.nutrifacts.app.ui.screen.profile.ProfileScreen
 import com.nutrifacts.app.ui.screen.search.SearchScreen
 import com.nutrifacts.app.ui.screen.signup.SignupScreen
 
@@ -50,7 +51,7 @@ fun NutrifactsApp(
     navController: NavHostController = rememberNavController()
 ) {
     val isLogin = remember {
-        mutableStateOf(false)
+        mutableStateOf(true)
     }
     Scaffold(
         topBar = {
@@ -91,6 +92,9 @@ fun NutrifactsApp(
             composable(Screen.History.route) {
                 HistoryScreen()
             }
+            composable(Screen.Profile.route) {
+                ProfileScreen()
+            }
         }
 
     }
@@ -108,7 +112,12 @@ fun TopAppBar(
     if (currentRoute != Screen.Landing.route && currentRoute != Screen.Login.route && currentRoute != Screen.Signup.route) {
         androidx.compose.material3.TopAppBar(
             title = {
-                Text(text = currentRoute.toString(), maxLines = 1, overflow = TextOverflow.Ellipsis)
+                Text(
+                    text = currentRoute.toString(),
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                    style = MaterialTheme.typography.titleMedium
+                )
             },
             navigationIcon = {
                 if (currentRoute == Screen.Profile.route || currentRoute == Screen.Settings.route) {
@@ -123,7 +132,7 @@ fun TopAppBar(
                 }
             },
             actions = {
-                IconButton(onClick = { }) {
+                IconButton(onClick = { navController.navigate(Screen.Profile.route) }) {
                     Icon(
                         imageVector = Icons.Default.AccountCircle,
                         contentDescription = stringResource(
@@ -154,7 +163,7 @@ private fun BottomAppBar(
 ) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
-    if (currentRoute != Screen.Landing.route && currentRoute != Screen.Login.route && currentRoute != Screen.Signup.route) {
+    if (currentRoute == Screen.Home.route || currentRoute == Screen.Search.route || currentRoute == Screen.History.route) {
         NavigationBar(modifier = modifier) {
             val navigationItems = listOf(
                 NavigationItem(
