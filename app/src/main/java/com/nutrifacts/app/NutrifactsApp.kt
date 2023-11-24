@@ -51,7 +51,7 @@ fun NutrifactsApp(
     navController: NavHostController = rememberNavController()
 ) {
     val isLogin = remember {
-        mutableStateOf(true)
+        mutableStateOf(false)
     }
     Scaffold(
         topBar = {
