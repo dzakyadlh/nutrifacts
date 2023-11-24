@@ -51,7 +51,7 @@ fun NutrifactsApp(
     navController: NavHostController = rememberNavController()
 ) {
     val isLogin = remember {
-        mutableStateOf(false)
+        mutableStateOf(true)
     }
     Scaffold(
         topBar = {
@@ -87,10 +87,10 @@ fun NutrifactsApp(
                 HomeScreen()
             }
             composable(Screen.Search.route) {
-                SearchScreen()
+                SearchScreen(navigateToDetail = {})
             }
             composable(Screen.History.route) {
-                HistoryScreen()
+                HistoryScreen(navigateToDetail = {})
             }
             composable(Screen.Profile.route) {
                 ProfileScreen()
