@@ -1,6 +1,5 @@
-package com.nutrifacts.app.utils
+package com.nutrifacts.app.ui.components
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -15,6 +14,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -28,14 +28,15 @@ import com.nutrifacts.app.R
 
 @Composable
 fun SmallCard(
-    id: String,
+    barcode: String,
     name: String,
     company: String,
+    modifier: Modifier = Modifier,
     photoUrl: String? = null,
     navigateToDetail: (String) -> Unit
 ) {
     Column(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .padding(all = 8.dp)
     ) {
@@ -43,33 +44,36 @@ fun SmallCard(
             elevation = CardDefaults.cardElevation(
                 defaultElevation = 6.dp
             ),
-            modifier = Modifier
+            colors = CardDefaults.cardColors(
+                containerColor = MaterialTheme.colorScheme.surfaceVariant
+            ),
+            modifier = modifier
                 .fillMaxWidth()
                 .height(80.dp)
-                .clickable { navigateToDetail(id) }
+                .clickable { navigateToDetail(barcode) }
         ) {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween,
-                modifier = Modifier.fillMaxWidth()
+                modifier = modifier.fillMaxWidth()
             ) {
                 Column {
                     Text(
                         text = name,
                         style = MaterialTheme.typography.titleSmall,
-                        modifier = Modifier
+                        modifier = modifier
                             .padding(start = 16.dp),
                         textAlign = TextAlign.Center
                     )
                     Text(
                         text = company,
                         style = MaterialTheme.typography.bodySmall,
-                        modifier = Modifier.padding(start = 16.dp),
+                        modifier = modifier.padding(start = 16.dp),
                         textAlign = TextAlign.Center
                     )
                 }
                 Box(
-                    modifier = Modifier
+                    modifier = modifier
                         .size(80.dp)
                         .clip(
                             RoundedCornerShape(
@@ -79,13 +83,12 @@ fun SmallCard(
                                 bottomStart = 0.dp
                             )
                         )
-                        .background(MaterialTheme.colorScheme.primary)
                 ) {
                     AsyncImage(
                         model = photoUrl ?: R.drawable.ic_launcher_background,
                         contentDescription = name,
                         contentScale = ContentScale.Crop,
-                        modifier = Modifier.fillMaxSize()
+                        modifier = modifier.fillMaxSize()
                     )
                 }
             }
@@ -94,10 +97,19 @@ fun SmallCard(
 }
 
 @Composable
-fun BigCard(title:String, source:String, description:String, modifier: Modifier = Modifier, photoUrl: String?=null) {
-    ElevatedCard(
+fun BigCard(
+    title: String,
+    source: String,
+    description: String,
+    modifier: Modifier = Modifier,
+    photoUrl: String? = null
+) {
+    OutlinedCard(
         elevation = CardDefaults.cardElevation(
             defaultElevation = 6.dp
+        ),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surfaceVariant
         ),
         modifier = modifier
             .fillMaxWidth()
@@ -109,7 +121,9 @@ fun BigCard(title:String, source:String, description:String, modifier: Modifier 
                 model = photoUrl ?: R.drawable.ic_launcher_background,
                 contentDescription = title,
                 contentScale = ContentScale.Crop,
-                modifier = modifier.fillMaxWidth().height(150.dp)
+                modifier = modifier
+                    .fillMaxWidth()
+                    .height(150.dp)
             )
             Column(modifier = modifier.padding(all = 16.dp)) {
                 Text(text = title, style = MaterialTheme.typography.titleSmall)

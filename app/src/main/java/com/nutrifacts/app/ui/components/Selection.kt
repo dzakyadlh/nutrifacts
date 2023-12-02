@@ -1,4 +1,4 @@
-package com.nutrifacts.app.utils
+package com.nutrifacts.app.ui.components
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Row

@@ -23,13 +23,15 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.nutrifacts.app.R
-import com.nutrifacts.app.utils.SelectionPainter
-import com.nutrifacts.app.utils.SelectionVector
+import com.nutrifacts.app.ui.navigation.Screen
+import com.nutrifacts.app.ui.components.SelectionPainter
+import com.nutrifacts.app.ui.components.SelectionVector
 
 @Composable
-fun ProfileScreen(modifier: Modifier = Modifier) {
+fun ProfileScreen(navController: NavController, modifier: Modifier = Modifier) {
     var photoUrl = null
     Column(modifier = modifier) {
         Row(verticalAlignment = Alignment.CenterVertically, modifier = modifier.padding(16.dp)) {
@@ -58,21 +60,28 @@ fun ProfileScreen(modifier: Modifier = Modifier) {
         Divider(color = MaterialTheme.colorScheme.onSurface, thickness = 1.dp)
         SelectionVector(
             icon = Icons.Default.Person,
-            label = stringResource(id = R.string.account)
+            label = stringResource(id = R.string.account),
+            onClick = { navController.navigate(Screen.Account.route) }
         )
         SelectionPainter(
             icon = painterResource(id = R.drawable.baseline_bookmark_24),
-            label = stringResource(id = R.string.saved_product)
+            label = stringResource(id = R.string.saved_product),
+            onClick = { navController.navigate(Screen.Saved.route) }
         )
         SelectionVector(
             icon = Icons.Default.Notifications,
-            label = stringResource(id = R.string.notifications)
+            label = stringResource(id = R.string.notifications),
+            onClick = { navController.navigate(Screen.Notifications.route) }
         )
         SelectionVector(
             icon = Icons.Default.Settings,
-            label = stringResource(id = R.string.settings)
+            label = stringResource(id = R.string.settings),
+            onClick = { navController.navigate(Screen.Settings.route) }
         )
         Divider(color = MaterialTheme.colorScheme.onSurface, thickness = 1.dp)
-        SelectionVector(icon = Icons.Default.ExitToApp, label = stringResource(id = R.string.logout))
+        SelectionVector(
+            icon = Icons.Default.ExitToApp,
+            label = stringResource(id = R.string.logout)
+        )
     }
 }

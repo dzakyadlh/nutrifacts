@@ -1,4 +1,4 @@
-package com.nutrifacts.app.ui.screen.settings
+package com.nutrifacts.app.ui.screen.notifications
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -20,7 +20,7 @@ import androidx.compose.ui.unit.dp
 import com.nutrifacts.app.R
 
 @Composable
-fun SettingsScreen(modifier: Modifier =Modifier) {
+fun NotificationsScreen(modifier: Modifier = Modifier) {
     var checked by remember { mutableStateOf(false) }
     Column(modifier = modifier.fillMaxWidth()) {
         Row(
@@ -28,7 +28,7 @@ fun SettingsScreen(modifier: Modifier =Modifier) {
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Text(text = stringResource(id = R.string.dark_theme), style = MaterialTheme.typography.bodyMedium)
+            Text(text = stringResource(id = R.string.allow_notification), style = MaterialTheme.typography.bodyMedium)
             Switch(
                 checked = checked,
                 onCheckedChange = {

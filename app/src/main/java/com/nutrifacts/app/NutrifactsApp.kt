@@ -8,8 +8,8 @@ import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.List
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -25,23 +25,31 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.nutrifacts.app.ui.navigation.NavigationItem
 import com.nutrifacts.app.ui.navigation.Screen
+import com.nutrifacts.app.ui.screen.account.AccountScreen
+import com.nutrifacts.app.ui.screen.detail.DetailScreen
 import com.nutrifacts.app.ui.screen.history.HistoryScreen
 import com.nutrifacts.app.ui.screen.home.HomeScreen
 import com.nutrifacts.app.ui.screen.landing.LandingScreen
 import com.nutrifacts.app.ui.screen.login.LoginScreen
+import com.nutrifacts.app.ui.screen.notifications.NotificationsScreen
 import com.nutrifacts.app.ui.screen.profile.ProfileScreen
+import com.nutrifacts.app.ui.screen.saved.SavedScreen
 import com.nutrifacts.app.ui.screen.search.SearchScreen
+import com.nutrifacts.app.ui.screen.settings.SettingsScreen
 import com.nutrifacts.app.ui.screen.signup.SignupScreen
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -56,6 +64,9 @@ fun NutrifactsApp(
     Scaffold(
         topBar = {
             TopAppBar(navController)
+        },
+        floatingActionButton = {
+            FAB(navController = navController, onClick = {})
         },
         bottomBar = {
             BottomAppBar(navController)
@@ -87,13 +98,44 @@ fun NutrifactsApp(
                 HomeScreen()
             }
             composable(Screen.Search.route) {
-                SearchScreen(navigateToDetail = {})
+                SearchScreen(navigateToDetail = { barcode ->
+                    navController.navigate(
+                        Screen.Detail.createRoute(barcode)
+                    )
+                })
             }
             composable(Screen.History.route) {
-                HistoryScreen(navigateToDetail = {})
+                HistoryScreen(navigateToDetail = { barcode ->
+                    navController.navigate(
+                        Screen.Detail.createRoute(barcode)
+                    )
+                })
             }
             composable(Screen.Profile.route) {
-                ProfileScreen()
+                ProfileScreen(navController = navController)
+            }
+            composable(
+                route = Screen.Detail.route,
+                arguments = listOf(navArgument("barcode") { type = NavType.StringType })
+            ) {
+                val barcode = it.arguments?.getString("barcode") ?: -1L
+                DetailScreen(barcode = barcode.toString())
+            }
+            composable(Screen.Account.route) {
+                AccountScreen()
+            }
+            composable(Screen.Saved.route) {
+                SavedScreen(navigateToDetail = { barcode ->
+                    navController.navigate(
+                        Screen.Detail.createRoute(barcode)
+                    )
+                })
+            }
+            composable(Screen.Notifications.route) {
+                NotificationsScreen()
+            }
+            composable(Screen.Settings.route) {
+                SettingsScreen()
             }
         }
 
@@ -120,7 +162,7 @@ fun TopAppBar(
                 )
             },
             navigationIcon = {
-                if (currentRoute == Screen.Profile.route || currentRoute == Screen.Settings.route) {
+                if (currentRoute != Screen.Home.route && currentRoute != Screen.Search.route && currentRoute != Screen.History.route) {
                     IconButton(onClick = { navController.navigateUp() }) {
                         Icon(
                             imageVector = Icons.Default.ArrowBack,
@@ -132,20 +174,23 @@ fun TopAppBar(
                 }
             },
             actions = {
-                IconButton(onClick = { navController.navigate(Screen.Profile.route) }) {
-                    Icon(
-                        imageVector = Icons.Default.AccountCircle,
-                        contentDescription = stringResource(
-                            R.string.menu_profile
+                if (currentRoute == Screen.Detail.route) {
+                    IconButton(onClick = { }) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.baseline_bookmark_border_24),
+                            contentDescription = stringResource(id = R.string.save)
                         )
-                    )
+                    }
                 }
-                IconButton(onClick = {}) {
-                    Icon(
-                        imageVector = Icons.Default.Settings,
-                        contentDescription = stringResource(R.string.menu_settings)
-                    )
-
+                if (currentRoute == Screen.Home.route || currentRoute == Screen.Search.route || currentRoute == Screen.History.route) {
+                    IconButton(onClick = { navController.navigate(Screen.Profile.route) }) {
+                        Icon(
+                            imageVector = Icons.Default.AccountCircle,
+                            contentDescription = stringResource(
+                                R.string.menu_profile
+                            )
+                        )
+                    }
                 }
             },
             scrollBehavior = scrollBehavior,
@@ -153,6 +198,22 @@ fun TopAppBar(
                 .background(color = MaterialTheme.colorScheme.surface)
                 .shadow(1.dp)
         )
+    }
+}
+
+@Composable
+private fun FAB(navController: NavHostController, onClick: () -> Unit) {
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
+    val currentRoute = navBackStackEntry?.destination?.route
+    if (currentRoute == Screen.Home.route || currentRoute == Screen.Search.route || currentRoute == Screen.History.route){
+        FloatingActionButton(onClick = { onClick() }, containerColor = MaterialTheme.colorScheme.primary) {
+            Icon(
+                painter = painterResource(id = R.drawable.baseline_qr_code_scanner_24),
+                contentDescription = stringResource(
+                    id = R.string.scanner
+                )
+            )
+        }
     }
 }
 

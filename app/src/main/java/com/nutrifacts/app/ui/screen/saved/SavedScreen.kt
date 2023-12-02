@@ -1,4 +1,4 @@
-package com.nutrifacts.app.ui.screen.history
+package com.nutrifacts.app.ui.screen.saved
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -8,12 +8,12 @@ import androidx.compose.ui.Modifier
 import com.nutrifacts.app.ui.components.SmallCard
 
 @Composable
-fun HistoryScreen(modifier: Modifier = Modifier, navigateToDetail: (String) -> Unit){
-    HistoryContent(modifier = modifier, navigateToDetail = navigateToDetail)
+fun SavedScreen(modifier: Modifier = Modifier, navigateToDetail: (String) -> Unit){
+    SavedContent(modifier = modifier, navigateToDetail = navigateToDetail)
 }
 
 @Composable
-fun HistoryContent(modifier: Modifier = Modifier, navigateToDetail:(String)->Unit){
+fun SavedContent(modifier: Modifier = Modifier, navigateToDetail:(String)->Unit){
     Box(modifier = modifier){
         val scope = rememberCoroutineScope()
         val listState = rememberLazyListState()

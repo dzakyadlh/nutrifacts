@@ -24,7 +24,7 @@ import androidx.compose.ui.unit.dp
 import com.nutrifacts.app.R
 import com.nutrifacts.app.ui.theme.RedApple
 import com.nutrifacts.app.ui.theme.YellowApple
-import com.nutrifacts.app.utils.GradientButton
+import com.nutrifacts.app.ui.components.GradientButton
 
 @Composable
 fun LandingScreen(modifier: Modifier = Modifier, navigateToLogin: () -> Unit) {

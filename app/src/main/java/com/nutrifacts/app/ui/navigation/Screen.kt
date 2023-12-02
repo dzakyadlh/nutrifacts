@@ -8,7 +8,13 @@ sealed class Screen(val route: String) {
     object Search : Screen("Search")
     object History : Screen("History")
     object Scanner : Screen("Scanner")
-    object Detail : Screen("Home/{barcode}")
+    object Detail : Screen("Home/{barcode}") {
+        fun createRoute(barcode: String) = "Home/$barcode"
+    }
+
     object Profile : Screen("Profile")
+    object Account : Screen("Account")
+    object Saved : Screen("Saved Products")
+    object Notifications : Screen("Notifications")
     object Settings : Screen("Settings")
 }
