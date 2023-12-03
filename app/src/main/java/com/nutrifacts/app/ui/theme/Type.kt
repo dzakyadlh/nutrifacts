@@ -49,6 +49,16 @@ val Typography = Typography(
         letterSpacing = 0.sp,
         shadow = Shadow(color = Color.LightGray, offset = Offset(2.0f,2.0f), blurRadius = 2f)
     ),
+    headlineMedium = TextStyle(
+        fontFamily = fontFamily,
+        fontWeight = FontWeight.SemiBold,
+        fontSize = 20.sp,
+    ),
+    headlineSmall = TextStyle(
+        fontFamily = fontFamily,
+        fontWeight = FontWeight.SemiBold,
+        fontSize = 16.sp,
+    ),
     titleLarge = TextStyle(
         fontFamily = fontFamily,
         fontWeight = FontWeight.SemiBold,

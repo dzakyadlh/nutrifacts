@@ -1,6 +1,8 @@
 package com.nutrifacts.app
 
+import android.content.Intent
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
@@ -25,6 +27,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
@@ -48,6 +51,7 @@ import com.nutrifacts.app.ui.screen.login.LoginScreen
 import com.nutrifacts.app.ui.screen.notifications.NotificationsScreen
 import com.nutrifacts.app.ui.screen.profile.ProfileScreen
 import com.nutrifacts.app.ui.screen.saved.SavedScreen
+import com.nutrifacts.app.ui.screen.scanner.ScannerActivity
 import com.nutrifacts.app.ui.screen.search.SearchScreen
 import com.nutrifacts.app.ui.screen.settings.SettingsScreen
 import com.nutrifacts.app.ui.screen.signup.SignupScreen
@@ -66,7 +70,8 @@ fun NutrifactsApp(
             TopAppBar(navController)
         },
         floatingActionButton = {
-            FAB(navController = navController, onClick = {})
+            FAB(
+                navController = navController)
         },
         bottomBar = {
             BottomAppBar(navController)
@@ -114,6 +119,9 @@ fun NutrifactsApp(
             composable(Screen.Profile.route) {
                 ProfileScreen(navController = navController)
             }
+            composable(Screen.Scanner.route) {
+                ScannerActivity()
+            }
             composable(
                 route = Screen.Detail.route,
                 arguments = listOf(navArgument("barcode") { type = NavType.StringType })
@@ -151,7 +159,7 @@ fun TopAppBar(
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarState())
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
-    if (currentRoute != Screen.Landing.route && currentRoute != Screen.Login.route && currentRoute != Screen.Signup.route) {
+    if (currentRoute != Screen.Landing.route && currentRoute != Screen.Login.route && currentRoute != Screen.Signup.route && currentRoute != Screen.Scanner.route) {
         androidx.compose.material3.TopAppBar(
             title = {
                 Text(
@@ -202,11 +210,18 @@ fun TopAppBar(
 }
 
 @Composable
-private fun FAB(navController: NavHostController, onClick: () -> Unit) {
+private fun FAB(navController: NavHostController) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
-    if (currentRoute == Screen.Home.route || currentRoute == Screen.Search.route || currentRoute == Screen.History.route){
-        FloatingActionButton(onClick = { onClick() }, containerColor = MaterialTheme.colorScheme.primary) {
+    val context = LocalContext.current
+    if (currentRoute == Screen.Home.route || currentRoute == Screen.Search.route || currentRoute == Screen.History.route) {
+        FloatingActionButton(
+            onClick = {
+                val intent = Intent(context, ScannerActivity::class.java)
+                context.startActivity(intent)
+            },
+            containerColor = MaterialTheme.colorScheme.primary
+        ) {
             Icon(
                 painter = painterResource(id = R.drawable.baseline_qr_code_scanner_24),
                 contentDescription = stringResource(
@@ -225,7 +240,11 @@ private fun BottomAppBar(
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
     if (currentRoute == Screen.Home.route || currentRoute == Screen.Search.route || currentRoute == Screen.History.route) {
-        NavigationBar(modifier = modifier) {
+        NavigationBar(
+            modifier = modifier.border(width = 1.dp, color = MaterialTheme.colorScheme.onSurface),
+            containerColor = MaterialTheme.colorScheme.surface,
+            contentColor = MaterialTheme.colorScheme.onSurface
+        ) {
             val navigationItems = listOf(
                 NavigationItem(
                     title = stringResource(R.string.menu_home),
