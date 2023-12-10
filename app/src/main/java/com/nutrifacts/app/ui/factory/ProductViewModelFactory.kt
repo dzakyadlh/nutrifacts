@@ -1,4 +1,4 @@
-package com.nutrifacts.app.ui.screen.factory
+package com.nutrifacts.app.ui.factory
 
 import android.content.Context
 import androidx.lifecycle.ViewModel

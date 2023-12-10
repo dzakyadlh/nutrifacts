@@ -9,6 +9,7 @@ class ValidateUsername {
             )
         }
         return ValidationResults(
+            data = username,
             success = true
         )
     }

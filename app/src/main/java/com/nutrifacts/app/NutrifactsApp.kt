@@ -22,6 +22,8 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -40,6 +42,8 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.nutrifacts.app.data.pref.UserModel
+import com.nutrifacts.app.data.repository.UserRepository
 import com.nutrifacts.app.ui.navigation.NavigationItem
 import com.nutrifacts.app.ui.navigation.Screen
 import com.nutrifacts.app.ui.screen.account.AccountScreen
@@ -60,11 +64,21 @@ import com.nutrifacts.app.ui.screen.signup.SignupScreen
 @Composable
 fun NutrifactsApp(
     modifier: Modifier = Modifier,
+    userRepository: UserRepository,
     navController: NavHostController = rememberNavController()
 ) {
+
+    val userSession by userRepository.getSession().collectAsState(initial = UserModel(0, "", false))
+    
     val isLogin = remember {
-        mutableStateOf(true)
+        mutableStateOf(false)
     }
+
+    // Observe changes in the user session and update isLogin accordingly
+    LaunchedEffect(userSession) {
+        isLogin.value = userSession.isLogin
+    }
+
     Scaffold(
         topBar = {
             TopAppBar(navController)

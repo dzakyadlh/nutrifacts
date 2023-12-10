@@ -17,6 +17,7 @@ class ValidateEmail {
             )
         }
         return ValidationResults(
+            data = email,
             success = true
         )
     }

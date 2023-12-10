@@ -17,6 +17,7 @@ class ValidatePassword {
             )
         }
         return ValidationResults(
+            data = password,
             success = true
         )
     }

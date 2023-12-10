@@ -7,9 +7,16 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
+import com.nutrifacts.app.data.repository.UserRepository
+import com.nutrifacts.app.di.Injection
 import com.nutrifacts.app.ui.theme.NutrifactsTheme
 
 class MainActivity : ComponentActivity() {
+
+    private val userRepository: UserRepository by lazy {
+        Injection.provideUserRepository(this)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -19,7 +26,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    NutrifactsApp()
+                    NutrifactsApp(userRepository = userRepository)
                 }
             }
         }

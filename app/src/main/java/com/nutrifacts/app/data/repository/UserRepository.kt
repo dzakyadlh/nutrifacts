@@ -1,9 +1,16 @@
 package com.nutrifacts.app.data.repository
 
+import com.google.gson.Gson
+import com.nutrifacts.app.data.Result
 import com.nutrifacts.app.data.pref.UserModel
 import com.nutrifacts.app.data.pref.UserPreference
+import com.nutrifacts.app.data.response.ErrorResponse
 import com.nutrifacts.app.data.retrofit.APIService
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
+import retrofit2.HttpException
 
 class UserRepository private constructor(
     private val userPreference: UserPreference,
@@ -22,33 +29,37 @@ class UserRepository private constructor(
         userPreference.logout()
     }
 
-//    fun signup(
-//        username: String,
-//        email: String,
-//        password: String
-//    ) = liveData {
-//        emit(Result.Loading)
-//        try {
-//            val response = apiService.register(username, email, password)
-//            emit(Result.Success(response))
-//        } catch (e: HttpException) {
-//            val errorBody = e.response()?.errorBody()?.string()
-//            val response = Gson().fromJson(errorBody, ErrorResponse::class.java)
-//            emit(Result.Error(response.message.toString()))
-//        }
-//    }
-//
-//    fun login(email: String, password: String) = liveData {
-//        emit(Result.Loading)
-//        try {
-//            val response = apiService.login(email, password)
-//            emit(Result.Success(response))
-//        } catch (e: HttpException) {
-//            val errorBody = e.response()?.errorBody()?.string()
-//            val response = Gson().fromJson(errorBody, ErrorResponse::class.java)
-//            emit(Result.Error(response.message.toString()))
-//        }
-//    }
+    fun signup(
+        email: String,
+        username: String,
+        password: String
+    ) = flow {
+        emit(Result.Loading)
+        try {
+            val response = apiService.signup(email, username, password)
+            emit(Result.Success(response))
+        } catch (e: HttpException) {
+            val errorBody = e.response()?.errorBody()?.string()
+            val response = Gson().fromJson(errorBody, ErrorResponse::class.java)
+            emit(Result.Error(response.message.toString()))
+        }
+    }.flowOn(Dispatchers.IO)
+
+    fun login(email: String, password: String): Flow<Result<UserModel>> = flow {
+        emit(Result.Loading)
+        try {
+            val response = apiService.login(email, password)
+            val userModel = UserModel(
+                response.userId!!,
+                response.token!!
+            )
+            emit(Result.Success(userModel))
+        } catch (e: HttpException) {
+            val errorBody = e.response()?.errorBody()?.string()
+            val response = Gson().fromJson(errorBody, ErrorResponse::class.java)
+            emit(Result.Error(response.message.toString()))
+        }
+    }.flowOn(Dispatchers.IO)
 
     companion object {
         @Volatile

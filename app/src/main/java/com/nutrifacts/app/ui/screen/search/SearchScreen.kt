@@ -24,7 +24,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.nutrifacts.app.R
 import com.nutrifacts.app.di.Injection
-import com.nutrifacts.app.ui.screen.factory.ProductViewModelFactory
+import com.nutrifacts.app.ui.factory.ProductViewModelFactory
 
 @Composable
 fun SearchScreen(

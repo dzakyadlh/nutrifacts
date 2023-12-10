@@ -20,18 +20,30 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.nutrifacts.app.R
-import com.nutrifacts.app.ui.navigation.Screen
+import com.nutrifacts.app.di.Injection
 import com.nutrifacts.app.ui.components.SelectionPainter
 import com.nutrifacts.app.ui.components.SelectionVector
+import com.nutrifacts.app.ui.factory.UserViewModelFactory
+import com.nutrifacts.app.ui.navigation.Screen
+import kotlinx.coroutines.launch
 
 @Composable
-fun ProfileScreen(navController: NavController, modifier: Modifier = Modifier) {
+fun ProfileScreen(
+    navController: NavController,
+    modifier: Modifier = Modifier,
+    viewModel: ProfileViewModel = viewModel(
+        factory = UserViewModelFactory(Injection.provideUserRepository(LocalContext.current))
+    )
+) {
     var photoUrl = null
     Column(modifier = modifier) {
         Row(verticalAlignment = Alignment.CenterVertically, modifier = modifier.padding(16.dp)) {
@@ -81,7 +93,12 @@ fun ProfileScreen(navController: NavController, modifier: Modifier = Modifier) {
         Divider(color = MaterialTheme.colorScheme.onSurface, thickness = 1.dp)
         SelectionVector(
             icon = Icons.Default.ExitToApp,
-            label = stringResource(id = R.string.logout)
+            label = stringResource(id = R.string.logout),
+            onClick = {
+                viewModel.viewModelScope.launch {
+                    viewModel.logout()
+                }
+            }
         )
     }
 }
