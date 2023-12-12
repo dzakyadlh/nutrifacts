@@ -2,7 +2,7 @@ package com.nutrifacts.app.data.repository
 
 import com.google.gson.Gson
 import com.nutrifacts.app.data.Result
-import com.nutrifacts.app.data.pref.UserModel
+import com.nutrifacts.app.data.model.UserModel
 import com.nutrifacts.app.data.pref.UserPreference
 import com.nutrifacts.app.data.response.ErrorResponse
 import com.nutrifacts.app.data.retrofit.APIService

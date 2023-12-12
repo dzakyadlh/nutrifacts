@@ -1,6 +1,9 @@
 package com.nutrifacts.app.data.retrofit
 
+import com.nutrifacts.app.data.response.GetAllProductResponse
 import com.nutrifacts.app.data.response.GetAllUserResponse
+import com.nutrifacts.app.data.response.GetProductByBarcodeResponse
+import com.nutrifacts.app.data.response.GetProductByNameResponse
 import com.nutrifacts.app.data.response.GetUserByIdResponse
 import com.nutrifacts.app.data.response.LoginResponse
 import com.nutrifacts.app.data.response.SignupResponse
@@ -26,11 +29,10 @@ interface APIService {
         @Field("password") password: String
     ): LoginResponse
 
-    @FormUrlEncoded
     @GET("user")
     suspend fun getAllUser(
     ): GetAllUserResponse
-    @FormUrlEncoded
+
     @GET("user/{id}")
     suspend fun getUserById(
         @Path("id") id: String
@@ -42,14 +44,17 @@ interface APIService {
 //        @Path("id") id: String
 //    ): EditUserResponse
 
-//    @FormUrlEncoded
-//    @GET("product")
-//    suspend fun getAllProducts(
-//    ): GetAllProductsResponse
+    @GET("product")
+    suspend fun getAllProducts(
+    ): GetAllProductResponse
 
-//    @FormUrlEncoded
-//    @GET("user/{id}")
-//    suspend fun getProductDetail(
-//        @Path("id") id: String
-//    ): GetProductDetailResponse
+    @GET("product/name/{name}")
+    suspend fun getProductByName(
+        @Path("name") name: String
+    ): GetProductByNameResponse
+
+    @GET("product/barcode/{barcode}")
+    suspend fun getProductByBarcode(
+        @Path("barcode") barcode: String
+    ): GetProductByBarcodeResponse
 }

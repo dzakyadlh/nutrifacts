@@ -1,6 +1,5 @@
 package com.nutrifacts.app.data.local.room
 
-import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
@@ -16,9 +15,6 @@ interface HistoryDao {
     @Delete
     fun delete(history: History)
 
-    @Query("SELECT * from history ORDER BY dateAdded")
-    fun getAllSavedProducts(): Flow<List<History>>
-
-    @Query("SELECT * from history WHERE barcode = :barcode")
-    fun getSavedProduct(barcode: String): LiveData<History>
+    @Query("SELECT * from history WHERE user_id = :user_id ORDER BY dateAdded ASC")
+    fun getAllHistory(user_id:Int): Flow<List<History>>
 }

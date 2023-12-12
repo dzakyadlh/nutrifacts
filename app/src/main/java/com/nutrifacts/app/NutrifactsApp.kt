@@ -1,6 +1,7 @@
 package com.nutrifacts.app
 
 import android.content.Intent
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.padding
@@ -42,7 +43,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.nutrifacts.app.data.pref.UserModel
+import com.nutrifacts.app.data.model.UserModel
 import com.nutrifacts.app.data.repository.UserRepository
 import com.nutrifacts.app.ui.navigation.NavigationItem
 import com.nutrifacts.app.ui.navigation.Screen
@@ -233,6 +234,7 @@ private fun FAB(navController: NavHostController) {
             onClick = {
                 val intent = Intent(context, ScannerActivity::class.java)
                 context.startActivity(intent)
+                Log.d("FAB", "FAB Clicked. Intent: $intent")
             },
             containerColor = MaterialTheme.colorScheme.primary
         ) {

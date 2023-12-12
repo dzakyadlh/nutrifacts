@@ -8,12 +8,13 @@ import kotlinx.parcelize.Parcelize
 @Entity
 @Parcelize
 data class History(
-    @field:PrimaryKey(autoGenerate = false)
-    var id: String,
+    @field:PrimaryKey(autoGenerate = true)
+    var id: Int,
 
     var name: String,
     var company: String,
     var photoUrl: String,
     var barcode: String,
+    var user_id:Int,
     val dateAdded: String
 ) : Parcelable

@@ -37,7 +37,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.nutrifacts.app.R
 import com.nutrifacts.app.data.Result
-import com.nutrifacts.app.data.pref.UserModel
+import com.nutrifacts.app.data.model.UserModel
 import com.nutrifacts.app.di.Injection
 import com.nutrifacts.app.ui.components.GradientButton
 import com.nutrifacts.app.ui.components.LinearLoading

@@ -37,11 +37,6 @@ import com.nutrifacts.app.ui.screen.scanner.ui.theme.NutrifactsTheme
 class ScannerActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-//        if (!hasRequiredPermissions()) {
-//            ActivityCompat.requestPermissions(
-//                this, CAMERAX_PERMISSIONS, 0
-//            )
-//        }
         val onBackPressedCallback = object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
                 // Navigate back to the previous screen

@@ -1,10 +1,11 @@
 package com.nutrifacts.app.data.model
 
 data class ProductModel(
-    val id: String,
-    val name: String,
-    val variant: String,
-    val description: String,
-    val photoUrl: String,
-    val company: String,
+    var photoUrl: String = "",
+    var nutritionData: String = "",
+    var name: String,
+    var company: String,
+    var id: Int,
+    var barcode: String,
+    var nutritionLevel: String = ""
 )

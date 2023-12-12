@@ -6,7 +6,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.nutrifacts.app.data.Result
-import com.nutrifacts.app.data.pref.UserModel
+import com.nutrifacts.app.data.model.UserModel
 import com.nutrifacts.app.data.repository.UserRepository
 import com.nutrifacts.app.data.use_case.ValidateEmail
 import com.nutrifacts.app.data.use_case.ValidatePassword

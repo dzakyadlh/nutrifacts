@@ -1,4 +1,4 @@
-package com.nutrifacts.app.data.pref
+package com.nutrifacts.app.data.model
 
 data class UserModel(
     var id: Int,
