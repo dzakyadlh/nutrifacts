@@ -5,27 +5,35 @@ import com.nutrifacts.app.data.local.entity.History
 import com.nutrifacts.app.data.local.room.HistoryDao
 import com.nutrifacts.app.data.local.room.HistoryDatabase
 import kotlinx.coroutines.flow.Flow
-import java.util.concurrent.ExecutorService
-import java.util.concurrent.Executors
 
-class HistoryRepository(context: Context) {
-    private val historyDao: HistoryDao
-    private val executorService: ExecutorService = Executors.newSingleThreadExecutor()
+class HistoryRepository(private val historyDao: HistoryDao) {
 
-    init {
-        val db = HistoryDatabase.getDatabase(context)
-        historyDao = db.historyDao()
+    companion object {
+
+        @Volatile
+        private var instance: HistoryRepository? = null
+
+        fun getInstance(context: Context): HistoryRepository {
+            return instance ?: synchronized(this) {
+                if (instance == null) {
+                    val database = HistoryDatabase.getDatabase(context)
+                    instance = HistoryRepository(database.historyDao())
+                }
+                return instance as HistoryRepository
+            }
+
+        }
     }
 
     fun getAllHistory(user_id: Int): Flow<List<History>> {
         return historyDao.getAllHistory(user_id)
     }
 
-    fun insert(history: History) {
-        executorService.execute { historyDao.insert(history) }
+    suspend fun insert(history: History) {
+        historyDao.insert(history)
     }
 
-    fun delete(history: History) {
-        executorService.execute { historyDao.delete(history) }
+    suspend fun delete(history: History) {
+        historyDao.delete(history)
     }
 }

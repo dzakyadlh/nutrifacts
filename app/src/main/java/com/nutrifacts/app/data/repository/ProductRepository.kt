@@ -50,7 +50,7 @@ class ProductRepository private constructor(
         emit(Result.Loading)
         try {
             val response = apiService.getProductByBarcode(barcode)
-            emit(Result.Success(response.product!!))
+            emit(Result.Success(response.product))
         } catch (e: HttpException) {
             val errorBody = e.response()?.errorBody()?.string()
             val errorResponse = Gson().fromJson(errorBody, ErrorResponse::class.java)

@@ -29,14 +29,14 @@ fun HistoryScreen(
     ),
     navigateToDetail: (String) -> Unit
 ) {
-    val userId = UserPreference.getInstance(LocalContext.current.dataStore).getSession().collectAsState(
+    val user = UserPreference.getInstance(LocalContext.current.dataStore).getSession().collectAsState(
         initial = UserModel(0,"",false)
     ).value
-    val history = viewModel.getAllHistory(userId.id).collectAsState(initial = emptyList()).value
+    val history = viewModel.getAllHistory(user.id).collectAsState(initial = emptyList()).value
     Box(modifier = modifier) {
         if (history.isEmpty()) {
             Text(
-                text = "You haven't saved any recipe",
+                text = "You don't have any history",
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(16.dp),

@@ -5,7 +5,7 @@ import com.google.gson.annotations.SerializedName
 data class GetProductByBarcodeResponse(
 
 	@field:SerializedName("product")
-	val product: Product? = null,
+	val product: Product = Product(),
 
 	@field:SerializedName("success")
 	val success: Boolean? = null,

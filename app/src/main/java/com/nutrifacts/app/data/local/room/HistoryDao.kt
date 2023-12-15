@@ -12,6 +12,9 @@ interface HistoryDao {
     @Insert
     fun insert(history: History)
 
+    @Insert
+    fun insertAll(vararg history: History)
+
     @Delete
     fun delete(history: History)
 

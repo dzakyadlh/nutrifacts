@@ -70,7 +70,7 @@ fun NutrifactsApp(
 ) {
 
     val userSession by userRepository.getSession().collectAsState(initial = UserModel(0, "", false))
-    
+
     val isLogin = remember {
         mutableStateOf(false)
     }
@@ -86,7 +86,8 @@ fun NutrifactsApp(
         },
         floatingActionButton = {
             FAB(
-                navController = navController)
+                navController = navController
+            )
         },
         bottomBar = {
             BottomAppBar(navController)
@@ -148,9 +149,9 @@ fun NutrifactsApp(
                 AccountScreen()
             }
             composable(Screen.Saved.route) {
-                SavedScreen(navigateToDetail = { barcode ->
+                SavedScreen(navigateToDetail = { product ->
                     navController.navigate(
-                        Screen.Detail.createRoute(barcode)
+                        Screen.Detail.createRoute(product)
                     )
                 })
             }
