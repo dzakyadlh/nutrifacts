@@ -3,18 +3,21 @@ package com.nutrifacts.app
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.viewModels
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import com.nutrifacts.app.data.repository.UserRepository
-import com.nutrifacts.app.di.Injection
+import com.nutrifacts.app.data.model.UserModel
+import com.nutrifacts.app.ui.factory.UserViewModelFactory
 import com.nutrifacts.app.ui.theme.NutrifactsTheme
 
 class MainActivity : ComponentActivity() {
 
-    private val userRepository: UserRepository by lazy {
-        Injection.provideUserRepository(this)
+    private val viewModel by viewModels<MainViewModel> {
+        UserViewModelFactory.getInstance(this)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -26,7 +29,8 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    NutrifactsApp(userRepository = userRepository)
+                    val user by viewModel.getSession().collectAsState(initial = UserModel(0, "", false))
+                    NutrifactsApp(userIsLogin = user.isLogin)
                 }
             }
         }

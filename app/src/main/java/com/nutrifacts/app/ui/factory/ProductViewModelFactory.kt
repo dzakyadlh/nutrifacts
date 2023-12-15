@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.nutrifacts.app.data.repository.ProductRepository
 import com.nutrifacts.app.di.Injection
 import com.nutrifacts.app.ui.screen.detail.DetailViewModel
+import com.nutrifacts.app.ui.screen.scanner.ScannerViewModel
 import com.nutrifacts.app.ui.screen.search.SearchViewModel
 
 class ProductViewModelFactory(private val repository: ProductRepository) :
@@ -16,6 +17,11 @@ class ProductViewModelFactory(private val repository: ProductRepository) :
             modelClass.isAssignableFrom(SearchViewModel::class.java) -> {
                 SearchViewModel(repository) as T
             }
+
+            modelClass.isAssignableFrom(ScannerViewModel::class.java) -> {
+                ScannerViewModel(repository) as T
+            }
+
             modelClass.isAssignableFrom(DetailViewModel::class.java) -> {
                 DetailViewModel(repository) as T
             }

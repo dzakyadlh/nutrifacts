@@ -1,7 +1,6 @@
 package com.nutrifacts.app
 
 import android.content.Intent
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.padding
@@ -23,11 +22,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.platform.LocalContext
@@ -43,8 +38,6 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.nutrifacts.app.data.model.UserModel
-import com.nutrifacts.app.data.repository.UserRepository
 import com.nutrifacts.app.ui.navigation.NavigationItem
 import com.nutrifacts.app.ui.navigation.Screen
 import com.nutrifacts.app.ui.screen.account.AccountScreen
@@ -60,26 +53,15 @@ import com.nutrifacts.app.ui.screen.scanner.ScannerActivity
 import com.nutrifacts.app.ui.screen.search.SearchScreen
 import com.nutrifacts.app.ui.screen.settings.SettingsScreen
 import com.nutrifacts.app.ui.screen.signup.SignupScreen
+import kotlinx.coroutines.DelicateCoroutinesApi
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun NutrifactsApp(
     modifier: Modifier = Modifier,
-    userRepository: UserRepository,
+    userIsLogin: Boolean,
     navController: NavHostController = rememberNavController()
 ) {
-
-    val userSession by userRepository.getSession().collectAsState(initial = UserModel(0, "", false))
-
-    val isLogin = remember {
-        mutableStateOf(false)
-    }
-
-    // Observe changes in the user session and update isLogin accordingly
-    LaunchedEffect(userSession) {
-        isLogin.value = userSession.isLogin
-    }
-
     Scaffold(
         topBar = {
             TopAppBar(navController)
@@ -96,7 +78,7 @@ fun NutrifactsApp(
     ) { innerPadding ->
         NavHost(
             navController = navController,
-            startDestination = if (isLogin.value) Screen.Home.route else Screen.Landing.route,
+            startDestination = if (userIsLogin) Screen.Home.route else Screen.Landing.route,
             modifier = Modifier.padding(innerPadding)
         ) {
             composable(Screen.Landing.route) {
@@ -178,12 +160,21 @@ fun TopAppBar(
     if (currentRoute != Screen.Landing.route && currentRoute != Screen.Login.route && currentRoute != Screen.Signup.route && currentRoute != Screen.Scanner.route) {
         androidx.compose.material3.TopAppBar(
             title = {
-                Text(
-                    text = currentRoute.toString(),
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis,
-                    style = MaterialTheme.typography.titleMedium
-                )
+                if (currentRoute != Screen.Detail.route) {
+                    Text(
+                        text = currentRoute.toString(),
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
+                        style = MaterialTheme.typography.titleMedium
+                    )
+                } else {
+                    Text(
+                        text = "Nutrifacts",
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
+                        style = MaterialTheme.typography.titleMedium
+                    )
+                }
             },
             navigationIcon = {
                 if (currentRoute != Screen.Home.route && currentRoute != Screen.Search.route && currentRoute != Screen.History.route) {
@@ -225,6 +216,7 @@ fun TopAppBar(
     }
 }
 
+@OptIn(DelicateCoroutinesApi::class)
 @Composable
 private fun FAB(navController: NavHostController) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
@@ -233,9 +225,10 @@ private fun FAB(navController: NavHostController) {
     if (currentRoute == Screen.Home.route || currentRoute == Screen.Search.route || currentRoute == Screen.History.route) {
         FloatingActionButton(
             onClick = {
-                val intent = Intent(context, ScannerActivity::class.java)
-                context.startActivity(intent)
-                Log.d("FAB", "FAB Clicked. Intent: $intent")
+//                val intent = Intent(context, ScannerActivity::class.java)
+//                context.startActivity(intent)
+//                Log.d("FAB", "FAB Clicked. Intent: $intent")
+                context.startActivity(Intent(context, ScannerActivity::class.java))
             },
             containerColor = MaterialTheme.colorScheme.primary
         ) {

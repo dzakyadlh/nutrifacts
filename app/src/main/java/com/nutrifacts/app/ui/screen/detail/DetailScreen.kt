@@ -65,7 +65,9 @@ fun DetailScreen(
                 barcode = thisProduct.barcode.toString(),
                 nutrilevel = thisProduct.nutritionLevel.toString(),
                 isSaved = false,
-                onSaveClick = {})
+                onSaveClick = {},
+                modifier
+                )
         }
 
         is Result.Error -> {

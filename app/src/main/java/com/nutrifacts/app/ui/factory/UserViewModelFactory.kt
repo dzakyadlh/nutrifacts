@@ -3,6 +3,7 @@ package com.nutrifacts.app.ui.factory
 import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import com.nutrifacts.app.MainViewModel
 import com.nutrifacts.app.data.repository.UserRepository
 import com.nutrifacts.app.di.Injection
 import com.nutrifacts.app.ui.screen.login.LoginViewModel
@@ -14,6 +15,10 @@ class UserViewModelFactory(private val repository: UserRepository) :
     @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         return when {
+            modelClass.isAssignableFrom(MainViewModel::class.java) -> {
+                MainViewModel(repository) as T
+            }
+
             modelClass.isAssignableFrom(SignupViewModel::class.java) -> {
                 SignupViewModel(repository) as T
             }

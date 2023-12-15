@@ -4,11 +4,13 @@ import android.Manifest
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Size
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.viewModels
 import androidx.camera.core.CameraSelector
 import androidx.camera.core.ImageAnalysis
 import androidx.camera.core.ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST
@@ -17,24 +19,28 @@ import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.view.PreviewView
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.ContextCompat
+import androidx.navigation.compose.rememberNavController
+import com.nutrifacts.app.data.Result
+import com.nutrifacts.app.ui.factory.ProductViewModelFactory
+import com.nutrifacts.app.ui.navigation.Screen
 import com.nutrifacts.app.ui.screen.scanner.ui.theme.NutrifactsTheme
 
 class ScannerActivity : ComponentActivity() {
+
+    private val viewModel by viewModels<ScannerViewModel> {
+        ProductViewModelFactory.getInstance(this)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val onBackPressedCallback = object : OnBackPressedCallback(true) {
@@ -46,7 +52,8 @@ class ScannerActivity : ComponentActivity() {
         onBackPressedDispatcher.addCallback(this, onBackPressedCallback)
         setContent {
             NutrifactsTheme {
-                var code by remember {
+                val navController = rememberNavController()
+                var barcode by remember {
                     mutableStateOf("")
                 }
                 val context = LocalContext.current
@@ -64,7 +71,7 @@ class ScannerActivity : ComponentActivity() {
                     }
                 )
                 LaunchedEffect(key1 = true) {
-                    launcher.launch(Manifest.permission.CAMERA)
+                    if (!hasPermission) launcher.launch(Manifest.permission.CAMERA)
                 }
                 Column(modifier = Modifier.fillMaxSize()) {
                     if (hasPermission) {
@@ -81,7 +88,7 @@ class ScannerActivity : ComponentActivity() {
                             imageAnalysis.setAnalyzer(
                                 ContextCompat.getMainExecutor(context),
                                 BarcodeScanner { result ->
-                                    code = result
+                                    barcode = result
                                 }
                             )
                             try {
@@ -92,14 +99,35 @@ class ScannerActivity : ComponentActivity() {
                                 e.printStackTrace()
                             }
                             previewView
-                        }, modifier = Modifier.weight(1f))
-                        Text(
-                            text = if (code != "") code else "Scan a Barcode",
-                            modifier = Modifier.fillMaxWidth(),
-                            style = MaterialTheme.typography.titleMedium,
-                            color = Color.Magenta,
-                            textAlign = TextAlign.Center
-                        )
+                        }, modifier = Modifier.weight(1f).fillMaxSize())
+                        LaunchedEffect(barcode) {
+                            viewModel.getProductByBarcode(barcode)
+                            viewModel.result.collect { result ->
+                                if (result != null) {
+                                    when (result) {
+                                        is Result.Loading -> {
+
+                                        }
+
+                                        is Result.Success -> {
+                                            navController.navigate(
+                                                Screen.Detail.createRoute(barcode)
+                                            )
+                                            finish()
+                                        }
+
+                                        is Result.Error -> {
+                                            Toast.makeText(
+                                                context,
+                                                result.error,
+                                                Toast.LENGTH_SHORT
+                                            )
+                                                .show()
+                                        }
+                                    }
+                                }
+                            }
+                        }
                     } else {
                         finish()
                     }
