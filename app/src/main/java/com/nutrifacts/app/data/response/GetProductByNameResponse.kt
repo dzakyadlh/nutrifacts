@@ -20,9 +20,6 @@ data class ProductItem(
 	@field:SerializedName("photoUrl")
 	val photoUrl: String? = null,
 
-	@field:SerializedName("nutrition_data")
-	val nutritionData: String? = null,
-
 	@field:SerializedName("name")
 	val name: String? = null,
 
@@ -35,7 +32,4 @@ data class ProductItem(
 
 	@field:SerializedName("barcode")
 	val barcode: String? = null,
-
-	@field:SerializedName("nutrition_level")
-	val nutritionLevel: String? = null
 )

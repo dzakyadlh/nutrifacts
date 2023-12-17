@@ -5,6 +5,7 @@ import com.nutrifacts.app.data.Result
 import com.nutrifacts.app.data.model.UserModel
 import com.nutrifacts.app.data.pref.UserPreference
 import com.nutrifacts.app.data.response.ErrorResponse
+import com.nutrifacts.app.data.response.GetUserByIdResponse
 import com.nutrifacts.app.data.retrofit.APIService
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -60,6 +61,18 @@ class UserRepository private constructor(
             emit(Result.Error(response.message.toString()))
         }
     }.flowOn(Dispatchers.IO)
+
+    fun getUserById(id: Int): Flow<Result<GetUserByIdResponse>> = flow {
+        emit(Result.Loading)
+        try {
+            val response = apiService.getUserById(id)
+            emit(Result.Success(response))
+        } catch (e: HttpException) {
+            val errorBody = e.response()?.errorBody()?.string()
+            val response = Gson().fromJson(errorBody, ErrorResponse::class.java)
+            emit(Result.Error(response.message.toString()))
+        }
+    }
 
     companion object {
         @Volatile

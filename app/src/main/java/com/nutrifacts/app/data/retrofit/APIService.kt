@@ -35,7 +35,7 @@ interface APIService {
 
     @GET("user/{id}")
     suspend fun getUserById(
-        @Path("id") id: String
+        @Path("id") id: Int
     ): GetUserByIdResponse
 
     //    @FormUrlEncoded

@@ -19,13 +19,13 @@ import com.nutrifacts.app.data.model.UserModel
 import com.nutrifacts.app.data.pref.UserPreference
 import com.nutrifacts.app.data.pref.dataStore
 import com.nutrifacts.app.ui.components.SmallCard
-import com.nutrifacts.app.ui.factory.HistoryViewModelFactory
+import com.nutrifacts.app.ui.factory.ProductViewModelFactory
 
 @Composable
 fun HistoryScreen(
     modifier: Modifier = Modifier,
     viewModel: HistoryViewModel = androidx.lifecycle.viewmodel.compose.viewModel(
-        factory = HistoryViewModelFactory.getInstance(LocalContext.current)
+        factory = ProductViewModelFactory.getInstance(LocalContext.current)
     ),
     navigateToDetail: (String) -> Unit
 ) {
@@ -47,11 +47,12 @@ fun HistoryScreen(
             val listState = rememberLazyListState()
             val context = LocalContext.current
             LazyColumn(state = listState, contentPadding = PaddingValues(bottom = 80.dp)){
-                items(history, key = { it.id }) { data ->
+                items(history, key = { it.id!! }) { data ->
                     SmallCard(
                         barcode = data.barcode,
                         name = data.name,
                         company = data.company,
+                        photoUrl = data.photoUrl,
                         navigateToDetail = navigateToDetail
                     )
                 }

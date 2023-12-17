@@ -3,6 +3,7 @@ package com.nutrifacts.app.data.repository
 import android.util.Log
 import com.google.gson.Gson
 import com.nutrifacts.app.data.Result
+import com.nutrifacts.app.data.local.entity.History
 import com.nutrifacts.app.data.local.room.HistoryDatabase
 import com.nutrifacts.app.data.local.room.SavedProductsDatabase
 import com.nutrifacts.app.data.response.ErrorResponse
@@ -10,8 +11,10 @@ import com.nutrifacts.app.data.response.GetAllProductResponseItem
 import com.nutrifacts.app.data.response.Product
 import com.nutrifacts.app.data.response.ProductItem
 import com.nutrifacts.app.data.retrofit.APIService
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.withContext
 import retrofit2.HttpException
 
 class ProductRepository private constructor(
@@ -55,6 +58,22 @@ class ProductRepository private constructor(
             val errorBody = e.response()?.errorBody()?.string()
             val errorResponse = Gson().fromJson(errorBody, ErrorResponse::class.java)
             emit(Result.Error(errorResponse.message.toString()))
+        }
+    }
+
+    fun getAllHistory(user_id: Int): Flow<List<History>> {
+        return historyDatabase.historyDao().getAllHistory(user_id)
+    }
+
+    suspend fun insertHistory(history: History) {
+        withContext(Dispatchers.IO) {
+            historyDatabase.historyDao().insert(history)
+        }
+    }
+
+    suspend fun deleteHistory(history: History) {
+        withContext(Dispatchers.IO) {
+            historyDatabase.historyDao().delete(history)
         }
     }
 

@@ -1,5 +1,6 @@
 package com.nutrifacts.app.ui.screen.profile
 
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -17,9 +18,14 @@ import androidx.compose.material3.Divider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -27,8 +33,9 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import coil.compose.AsyncImage
 import com.nutrifacts.app.R
+import com.nutrifacts.app.data.Result
+import com.nutrifacts.app.data.model.UserModel
 import com.nutrifacts.app.di.Injection
 import com.nutrifacts.app.ui.components.SelectionPainter
 import com.nutrifacts.app.ui.components.SelectionVector
@@ -44,29 +51,64 @@ fun ProfileScreen(
         factory = UserViewModelFactory(Injection.provideUserRepository(LocalContext.current))
     )
 ) {
-    var photoUrl = null
+    val context = LocalContext.current
+    var loading by remember {
+        mutableStateOf(false)
+    }
+    val userSession by viewModel.getSession().collectAsState(initial = UserModel(0, "", false))
+    LaunchedEffect(userSession) {
+        viewModel.getUserById(userSession.id)
+    }
+    val user by viewModel.result.collectAsState()
+
+    when (user) {
+        is Result.Loading -> {
+            loading = true
+        }
+
+        is Result.Success -> {
+            loading = false
+            val _user = (user as Result.Success).data
+            ProfileContent(
+                id = _user.userId,
+                email = _user.email.toString(),
+                username = _user.username.toString(),
+                isPremium = _user.isPremium!!,
+                navController = navController,
+                viewModel = viewModel
+            )
+        }
+
+        is Result.Error -> {
+            loading = false
+            val _user = (user as Result.Error)
+            Toast.makeText(context, _user.error, Toast.LENGTH_SHORT).show()
+        }
+    }
+}
+
+@Composable
+fun ProfileContent(
+    id: Int,
+    email: String,
+    username: String,
+    isPremium: Int,
+    navController: NavController,
+    viewModel: ProfileViewModel,
+    modifier: Modifier = Modifier
+) {
     Column(modifier = modifier) {
         Row(verticalAlignment = Alignment.CenterVertically, modifier = modifier.padding(16.dp)) {
-            if (photoUrl == null) {
-                Image(
-                    imageVector = Icons.Default.AccountCircle, contentDescription = stringResource(
-                        R.string.profile_pic
-                    ),
-                    modifier = modifier.size(120.dp)
-                )
-            } else {
-                AsyncImage(
-                    model = photoUrl, contentDescription = stringResource(
-                        R.string.profile_pic
-                    ),
-                    contentScale = ContentScale.Crop,
-                    modifier = modifier.size(120.dp)
-                )
-            }
+            Image(
+                imageVector = Icons.Default.AccountCircle, contentDescription = stringResource(
+                    R.string.profile_pic
+                ),
+                modifier = modifier.size(120.dp)
+            )
             Spacer(modifier = modifier.width(8.dp))
             Column {
-                Text(text = "Admin", style = MaterialTheme.typography.titleMedium)
-                Text(text = "admin@gmail.com", style = MaterialTheme.typography.bodyMedium)
+                Text(text = username, style = MaterialTheme.typography.titleMedium)
+                Text(text = email, style = MaterialTheme.typography.bodyMedium)
             }
         }
         Divider(color = MaterialTheme.colorScheme.onSurface, thickness = 1.dp)

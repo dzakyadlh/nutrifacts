@@ -4,24 +4,24 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.nutrifacts.app.data.Result
 import com.nutrifacts.app.data.local.entity.History
-import com.nutrifacts.app.data.repository.HistoryRepository
+import com.nutrifacts.app.data.repository.ProductRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 
-class HistoryViewModel(private val repository: HistoryRepository) : ViewModel() {
+class HistoryViewModel(private val repository: ProductRepository) : ViewModel() {
     private val _result: MutableStateFlow<Result<List<History>>> = MutableStateFlow(Result.Loading)
     val result: MutableStateFlow<Result<List<History>>> get() = _result
 
     fun insert(history: History) {
         viewModelScope.launch {
-            repository.insert(history)
+            repository.insertHistory(history)
         }
     }
 
     fun delete(history: History) {
         viewModelScope.launch {
-            repository.delete(history)
+            repository.deleteHistory(history)
         }
     }
 

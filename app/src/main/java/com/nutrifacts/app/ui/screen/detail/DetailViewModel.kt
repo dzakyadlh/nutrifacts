@@ -3,6 +3,7 @@ package com.nutrifacts.app.ui.screen.detail
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.nutrifacts.app.data.Result
+import com.nutrifacts.app.data.local.entity.History
 import com.nutrifacts.app.data.repository.ProductRepository
 import com.nutrifacts.app.data.response.Product
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -20,6 +21,12 @@ class DetailViewModel(private val repository: ProductRepository) : ViewModel() {
             repository.getProductByBarcode(barcode).collect { result ->
                 _result.value = result
             }
+        }
+    }
+
+    fun insertHistory(history: History){
+        viewModelScope.launch {
+            repository.insertHistory(history)
         }
     }
 }

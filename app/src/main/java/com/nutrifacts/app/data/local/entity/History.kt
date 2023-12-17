@@ -9,7 +9,7 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 data class History(
     @field:PrimaryKey(autoGenerate = true)
-    var id: Int,
+    var id: Int? = null,
 
     var name: String,
     var company: String,

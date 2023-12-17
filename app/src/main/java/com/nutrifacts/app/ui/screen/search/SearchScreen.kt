@@ -82,6 +82,7 @@ fun SearchScreen(
                             barcode = data.barcode.toString(),
                             name = data.name.toString(),
                             company = data.company.toString(),
+                            photoUrl = data.photoUrl.toString(),
                             navigateToDetail = navigateToDetail
                         )
                     }

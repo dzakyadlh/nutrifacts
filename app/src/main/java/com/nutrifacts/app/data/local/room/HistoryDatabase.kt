@@ -4,7 +4,6 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import androidx.sqlite.db.SupportSQLiteDatabase
 import com.nutrifacts.app.R
 import com.nutrifacts.app.data.local.entity.History
 import org.json.JSONArray
@@ -13,7 +12,6 @@ import org.json.JSONObject
 import java.io.BufferedReader
 import java.io.IOException
 import java.io.InputStreamReader
-import java.util.concurrent.Executors
 
 @Database(entities = [History::class], version = 1)
 abstract class HistoryDatabase : RoomDatabase() {
@@ -30,20 +28,7 @@ abstract class HistoryDatabase : RoomDatabase() {
                     context.applicationContext,
                     HistoryDatabase::class.java,
                     "history.db"
-                )
-                    .addCallback(object : RoomDatabase.Callback() {
-                        override fun onCreate(db: SupportSQLiteDatabase) {
-                            super.onCreate(db)
-                            INSTANCE?.let { database ->
-                                Executors.newSingleThreadScheduledExecutor().execute {
-                                    fillWithStartingData(
-                                        context.applicationContext,
-                                        database.historyDao()
-                                    )
-                                }
-                            }
-                        }
-                    }).build()
+                ).build()
                 INSTANCE = instance
                 instance
             }
