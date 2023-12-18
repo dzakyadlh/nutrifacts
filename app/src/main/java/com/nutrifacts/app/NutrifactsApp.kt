@@ -119,6 +119,7 @@ fun NutrifactsApp(
             }
             composable(Screen.Scanner.route) {
                 ScannerActivity()
+//                ScannerScreen(navController = navController)
             }
             composable(
                 route = Screen.Detail.route,
@@ -189,14 +190,6 @@ fun TopAppBar(
                 }
             },
             actions = {
-                if (currentRoute == Screen.Detail.route) {
-                    IconButton(onClick = { }) {
-                        Icon(
-                            painter = painterResource(id = R.drawable.baseline_bookmark_border_24),
-                            contentDescription = stringResource(id = R.string.save)
-                        )
-                    }
-                }
                 if (currentRoute == Screen.Home.route || currentRoute == Screen.Search.route || currentRoute == Screen.History.route) {
                     IconButton(onClick = { navController.navigate(Screen.Profile.route) }) {
                         Icon(
@@ -225,10 +218,8 @@ private fun FAB(navController: NavHostController) {
     if (currentRoute == Screen.Home.route || currentRoute == Screen.Search.route || currentRoute == Screen.History.route) {
         FloatingActionButton(
             onClick = {
-//                val intent = Intent(context, ScannerActivity::class.java)
-//                context.startActivity(intent)
-//                Log.d("FAB", "FAB Clicked. Intent: $intent")
                 context.startActivity(Intent(context, ScannerActivity::class.java))
+//                      navController.navigate(Screen.Scanner.route)
             },
             containerColor = MaterialTheme.colorScheme.primary
         ) {

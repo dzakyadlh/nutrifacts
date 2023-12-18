@@ -28,7 +28,6 @@
             android:name=".ui.screen.scanner.ScannerActivity"
             android:exported="false"
             android:label="@string/title_activity_scanner"
-            android:screenOrientation="landscape"
             android:theme="@style/Theme.Nutrifacts" />
         <activity
             android:name=".MainActivity"
@@ -51,21 +50,7 @@
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths" />
-        </provider> <!-- Trigger Google Play services to install the backported photo picker module. -->
-        <!-- suppress AndroidDomInspection -->
-<!--        <service-->
-<!--            android:name="com.google.android.gms.metadata.ModuleDependencies"-->
-<!--            android:enabled="false"-->
-<!--            android:exported="false"-->
-<!--            tools:ignore="MissingClass">-->
-<!--            <intent-filter>-->
-<!--                <action android:name="com.google.android.gms.metadata.MODULE_DEPENDENCIES" />-->
-<!--            </intent-filter>-->
-
-<!--            <meta-data-->
-<!--                android:name="photopicker_activity:0:required"-->
-<!--                android:value="" />-->
-<!--        </service>-->
+        </provider>
     </application>
 
 </manifest>

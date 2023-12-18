@@ -3,6 +3,7 @@ package com.nutrifacts.app.ui.screen.scanner
 import android.Manifest
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.util.Log
 import android.util.Size
 import android.widget.Toast
 import androidx.activity.ComponentActivity
@@ -29,10 +30,15 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.ContextCompat
+import androidx.navigation.NavType
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.nutrifacts.app.data.Result
 import com.nutrifacts.app.ui.factory.ProductViewModelFactory
 import com.nutrifacts.app.ui.navigation.Screen
+import com.nutrifacts.app.ui.screen.detail.DetailScreen
 import com.nutrifacts.app.ui.screen.scanner.ui.theme.NutrifactsTheme
 
 class ScannerActivity : ComponentActivity() {
@@ -53,83 +59,115 @@ class ScannerActivity : ComponentActivity() {
         setContent {
             NutrifactsTheme {
                 val navController = rememberNavController()
-                var barcode by remember {
-                    mutableStateOf("")
-                }
-                val context = LocalContext.current
-                val lifecycleOwner = LocalLifecycleOwner.current
-                val cameraProviderFuture = remember {
-                    ProcessCameraProvider.getInstance(context)
-                }
-                var hasPermission by remember {
-                    mutableStateOf(hasRequiredPermissions())
-                }
-                val launcher = rememberLauncherForActivityResult(
-                    contract = ActivityResultContracts.RequestPermission(),
-                    onResult = { granted ->
-                        hasPermission = granted
-                    }
-                )
-                LaunchedEffect(key1 = true) {
-                    if (!hasPermission) launcher.launch(Manifest.permission.CAMERA)
-                }
-                Column(modifier = Modifier.fillMaxSize()) {
-                    if (hasPermission) {
-                        AndroidView(factory = { context ->
-                            val previewView = PreviewView(context)
-                            val preview = Preview.Builder().build()
-                            val selector = CameraSelector.Builder()
-                                .requireLensFacing(CameraSelector.LENS_FACING_BACK).build()
-                            preview.setSurfaceProvider(previewView.surfaceProvider)
-                            val imageAnalysis = ImageAnalysis.Builder()
-                                .setTargetResolution(Size(previewView.width, previewView.height))
-                                .setBackpressureStrategy(STRATEGY_KEEP_ONLY_LATEST)
-                                .build()
-                            imageAnalysis.setAnalyzer(
-                                ContextCompat.getMainExecutor(context),
-                                BarcodeScanner { result ->
-                                    barcode = result
-                                }
-                            )
-                            try {
-                                cameraProviderFuture.get().bindToLifecycle(
-                                    lifecycleOwner, selector, preview, imageAnalysis
-                                )
-                            } catch (e: Exception) {
-                                e.printStackTrace()
+                NavHost(navController = navController, startDestination = Screen.Scanner.route) {
+                    composable(Screen.Scanner.route) {
+                        var barcode by remember {
+                            mutableStateOf("")
+                        }
+                        val context = LocalContext.current
+                        val lifecycleOwner = LocalLifecycleOwner.current
+                        val cameraProviderFuture = remember {
+                            ProcessCameraProvider.getInstance(context)
+                        }
+                        var hasPermission by remember {
+                            mutableStateOf(hasRequiredPermissions())
+                        }
+                        val launcher = rememberLauncherForActivityResult(
+                            contract = ActivityResultContracts.RequestPermission(),
+                            onResult = { granted ->
+                                hasPermission = granted
                             }
-                            previewView
-                        }, modifier = Modifier.weight(1f).fillMaxSize())
-                        LaunchedEffect(barcode) {
-                            viewModel.getProductByBarcode(barcode)
-                            viewModel.result.collect { result ->
-                                if (result != null) {
-                                    when (result) {
-                                        is Result.Loading -> {
-
-                                        }
-
-                                        is Result.Success -> {
-                                            navController.navigate(
-                                                Screen.Detail.createRoute(barcode)
+                        )
+                        LaunchedEffect(key1 = true) {
+                            if (!hasPermission) launcher.launch(Manifest.permission.CAMERA)
+                        }
+                        Column(modifier = Modifier.fillMaxSize()) {
+                            if (hasPermission) {
+                                Toast.makeText(
+                                    context,
+                                    "Please use landscape mode to scan",
+                                    Toast.LENGTH_SHORT
+                                )
+                                    .show()
+                                AndroidView(
+                                    factory = { context ->
+                                        val previewView = PreviewView(context)
+                                        val preview = Preview.Builder().build()
+                                        val selector = CameraSelector.Builder()
+                                            .requireLensFacing(CameraSelector.LENS_FACING_BACK)
+                                            .build()
+                                        preview.setSurfaceProvider(previewView.surfaceProvider)
+                                        val imageAnalysis = ImageAnalysis.Builder()
+                                            .setTargetResolution(
+                                                Size(
+                                                    previewView.width,
+                                                    previewView.height
+                                                )
                                             )
-                                            finish()
-                                        }
-
-                                        is Result.Error -> {
-                                            Toast.makeText(
-                                                context,
-                                                result.error,
-                                                Toast.LENGTH_SHORT
+                                            .setBackpressureStrategy(STRATEGY_KEEP_ONLY_LATEST)
+                                            .build()
+                                        imageAnalysis.setAnalyzer(
+                                            ContextCompat.getMainExecutor(context),
+                                            BarcodeScanner { result ->
+                                                barcode = result
+                                            }
+                                        )
+                                        try {
+                                            cameraProviderFuture.get().bindToLifecycle(
+                                                lifecycleOwner, selector, preview, imageAnalysis
                                             )
-                                                .show()
+                                        } catch (e: Exception) {
+                                            e.printStackTrace()
+                                        }
+                                        previewView
+                                    }, modifier = Modifier
+                                        .weight(1f)
+                                        .fillMaxSize()
+                                )
+                                LaunchedEffect(barcode) {
+                                    Toast.makeText(
+                                        context,
+                                        "Barcode: $barcode",
+                                        Toast.LENGTH_SHORT
+                                    )
+                                        .show()
+                                    Log.d("Scanner", "Barcode: $barcode")
+                                    viewModel.getProductByBarcode(barcode)
+                                    viewModel.result.collect { result ->
+                                        if (result != null) {
+                                            when (result) {
+                                                is Result.Loading -> {
+
+                                                }
+
+                                                is Result.Success -> {
+                                                    Log.d("Scanner", "Navigate to detail")
+                                                    navController.navigate(
+                                                        Screen.Detail.createRoute(barcode)
+                                                    )
+                                                }
+
+                                                is Result.Error -> {
+                                                    Toast.makeText(
+                                                        context,
+                                                        result.error,
+                                                        Toast.LENGTH_SHORT
+                                                    )
+                                                        .show()
+                                                }
+                                            }
                                         }
                                     }
                                 }
                             }
                         }
-                    } else {
-                        finish()
+                    }
+                    composable(
+                        route = Screen.Detail.route,
+                        arguments = listOf(navArgument("barcode") { type = NavType.StringType })
+                    ) {
+                        val barcode = it.arguments?.getString("barcode") ?: ""
+                        DetailScreen(barcode = barcode)
                     }
                 }
             }

@@ -1,12 +1,16 @@
 package com.nutrifacts.app.data.retrofit
 
+import com.nutrifacts.app.data.response.DeleteSavedProductResponse
 import com.nutrifacts.app.data.response.GetAllProductResponse
 import com.nutrifacts.app.data.response.GetAllUserResponse
 import com.nutrifacts.app.data.response.GetProductByBarcodeResponse
 import com.nutrifacts.app.data.response.GetProductByNameResponse
+import com.nutrifacts.app.data.response.GetSavedProductResponse
 import com.nutrifacts.app.data.response.GetUserByIdResponse
 import com.nutrifacts.app.data.response.LoginResponse
+import com.nutrifacts.app.data.response.SaveProductResponse
 import com.nutrifacts.app.data.response.SignupResponse
+import retrofit2.http.DELETE
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
 import retrofit2.http.GET
@@ -57,4 +61,23 @@ interface APIService {
     suspend fun getProductByBarcode(
         @Path("barcode") barcode: String
     ): GetProductByBarcodeResponse
+
+    @GET("product/saved/{user_id}")
+    suspend fun getSavedProduct(
+        @Path("user_id") user_id: Int
+    ): GetSavedProductResponse
+
+    @POST("product/saved")
+    suspend fun saveProduct(
+        @Field("name") name: String,
+        @Field("company") company: String,
+        @Field("photoUrl") photoUrl: String,
+        @Field("barcode") barcode: String,
+        @Field("user_id") user_id: Int,
+    ): SaveProductResponse
+
+    @DELETE("product/saved/{id}")
+    suspend fun deleteSavedProduct(
+        @Path("id") id: Int
+    ): DeleteSavedProductResponse
 }

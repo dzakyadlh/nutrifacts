@@ -10,10 +10,12 @@ import com.nutrifacts.app.data.response.ErrorResponse
 import com.nutrifacts.app.data.response.GetAllProductResponseItem
 import com.nutrifacts.app.data.response.Product
 import com.nutrifacts.app.data.response.ProductItem
+import com.nutrifacts.app.data.response.SavedProduct
 import com.nutrifacts.app.data.retrofit.APIService
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.withContext
 import retrofit2.HttpException
 
@@ -76,6 +78,47 @@ class ProductRepository private constructor(
             historyDatabase.historyDao().delete(history)
         }
     }
+
+    fun getSavedProduct(user_id: Int): Flow<Result<List<SavedProduct>>> = flow {
+        emit(Result.Loading)
+        try {
+            val response = apiService.getSavedProduct(user_id)
+            emit(Result.Success(response.product))
+        } catch (e: HttpException) {
+            val errorBody = e.response()?.errorBody()?.string()
+            val errorResponse = Gson().fromJson(errorBody, ErrorResponse::class.java)
+            emit(Result.Error(errorResponse.message.toString()))
+        }
+    }
+
+    fun saveProduct(
+        name: String,
+        company: String,
+        photoUrl: String,
+        barcode: String,
+        user_id: Int
+    ) = flow {
+        emit(Result.Loading)
+        try {
+            val response = apiService.saveProduct(name, company, photoUrl, barcode, user_id)
+            emit(Result.Success(response))
+        } catch (e: HttpException) {
+            val errorBody = e.response()?.errorBody()?.string()
+            val errorResponse = Gson().fromJson(errorBody, ErrorResponse::class.java)
+            emit(Result.Error(errorResponse.message.toString()))
+        }
+    }.flowOn(Dispatchers.IO)
+
+    fun deleteProduct(id: Int) = flow {
+        try {
+            val response = apiService.deleteSavedProduct(id)
+            emit(Result.Success(response))
+        } catch (e: HttpException) {
+            val errorBody = e.response()?.errorBody()?.string()
+            val errorResponse = Gson().fromJson(errorBody, ErrorResponse::class.java)
+            emit(Result.Error(errorResponse.message.toString()))
+        }
+    }.flowOn(Dispatchers.IO)
 
     companion object {
         @Volatile
