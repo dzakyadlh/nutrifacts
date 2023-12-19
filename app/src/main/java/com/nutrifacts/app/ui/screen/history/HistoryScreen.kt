@@ -11,6 +11,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
@@ -29,24 +30,26 @@ fun HistoryScreen(
     ),
     navigateToDetail: (String) -> Unit
 ) {
-    val user = UserPreference.getInstance(LocalContext.current.dataStore).getSession().collectAsState(
-        initial = UserModel(0,"",false)
-    ).value
+    val user =
+        UserPreference.getInstance(LocalContext.current.dataStore).getSession().collectAsState(
+            initial = UserModel(0, "", false)
+        ).value
     val history = viewModel.getAllHistory(user.id).collectAsState(initial = emptyList()).value
-    Box(modifier = modifier) {
+    Box(modifier = modifier.fillMaxSize()) {
         if (history.isEmpty()) {
             Text(
                 text = "You don't have any history",
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(16.dp),
+                    .padding(16.dp)
+                    .align(Alignment.Center),
                 textAlign = TextAlign.Center
             )
-        } else{
+        } else {
             val scope = rememberCoroutineScope()
             val listState = rememberLazyListState()
             val context = LocalContext.current
-            LazyColumn(state = listState, contentPadding = PaddingValues(bottom = 80.dp)){
+            LazyColumn(state = listState, contentPadding = PaddingValues(bottom = 80.dp)) {
                 items(history, key = { it.id!! }) { data ->
                     SmallCard(
                         barcode = data.barcode,

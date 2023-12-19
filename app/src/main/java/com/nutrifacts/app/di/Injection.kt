@@ -2,7 +2,6 @@ package com.nutrifacts.app.di
 
 import android.content.Context
 import com.nutrifacts.app.data.local.room.HistoryDatabase
-import com.nutrifacts.app.data.local.room.SavedProductsDatabase
 import com.nutrifacts.app.data.pref.UserPreference
 import com.nutrifacts.app.data.pref.dataStore
 import com.nutrifacts.app.data.repository.ProductRepository
@@ -22,9 +21,8 @@ object Injection {
     fun provideProductRepository(context: Context): ProductRepository {
         val pref = UserPreference.getInstance(context.dataStore)
         val user = runBlocking { pref.getSession().first() }
-        val savedProductsDatabase = SavedProductsDatabase.getDatabase(context)
         val historyDatabase = HistoryDatabase.getDatabase(context)
         val apiService = APIConfig.getApiService(user.token)
-        return ProductRepository.getInstance(savedProductsDatabase, historyDatabase, apiService)
+        return ProductRepository.getInstance(historyDatabase, apiService)
     }
 }

@@ -19,7 +19,8 @@ object APIConfig {
         val client: OkHttpClient = OkHttpClient.Builder().addInterceptor(loggingInterceptor)
             .addInterceptor(authInterceptor).build()
         val retrofit =
-            Retrofit.Builder().baseUrl("https://nutrifactsapp.et.r.appspot.com/").addConverterFactory(GsonConverterFactory.create())
+            Retrofit.Builder().baseUrl("https://nutrifactsapp.et.r.appspot.com/")
+                .addConverterFactory(GsonConverterFactory.create())
                 .client(client).build()
         return retrofit.create(APIService::class.java)
     }

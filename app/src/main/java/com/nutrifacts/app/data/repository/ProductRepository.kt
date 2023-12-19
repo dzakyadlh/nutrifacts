@@ -5,12 +5,11 @@ import com.google.gson.Gson
 import com.nutrifacts.app.data.Result
 import com.nutrifacts.app.data.local.entity.History
 import com.nutrifacts.app.data.local.room.HistoryDatabase
-import com.nutrifacts.app.data.local.room.SavedProductsDatabase
 import com.nutrifacts.app.data.response.ErrorResponse
 import com.nutrifacts.app.data.response.GetAllProductResponseItem
 import com.nutrifacts.app.data.response.Product
 import com.nutrifacts.app.data.response.ProductItem
-import com.nutrifacts.app.data.response.SavedProduct
+import com.nutrifacts.app.data.response.UserSavedItem
 import com.nutrifacts.app.data.retrofit.APIService
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -20,7 +19,6 @@ import kotlinx.coroutines.withContext
 import retrofit2.HttpException
 
 class ProductRepository private constructor(
-    private val savedProductsDatabase: SavedProductsDatabase,
     private val historyDatabase: HistoryDatabase,
     private val apiService: APIService
 ) {
@@ -79,11 +77,11 @@ class ProductRepository private constructor(
         }
     }
 
-    fun getSavedProduct(user_id: Int): Flow<Result<List<SavedProduct>>> = flow {
+    fun getSavedProduct(user_id: Int): Flow<Result<List<UserSavedItem>>> = flow {
         emit(Result.Loading)
         try {
             val response = apiService.getSavedProduct(user_id)
-            emit(Result.Success(response.product))
+            emit(Result.Success(response.userSaved))
         } catch (e: HttpException) {
             val errorBody = e.response()?.errorBody()?.string()
             val errorResponse = Gson().fromJson(errorBody, ErrorResponse::class.java)
@@ -100,22 +98,28 @@ class ProductRepository private constructor(
     ) = flow {
         emit(Result.Loading)
         try {
+            Log.d("ProductRepository", "saveProduct called with barcode: $barcode")
             val response = apiService.saveProduct(name, company, photoUrl, barcode, user_id)
+            Log.d("ProductRepository", "saveProduct response: $response")
             emit(Result.Success(response))
         } catch (e: HttpException) {
             val errorBody = e.response()?.errorBody()?.string()
             val errorResponse = Gson().fromJson(errorBody, ErrorResponse::class.java)
+            Log.e("ProductRepository", "saveProduct error: ${e.message}", e)
             emit(Result.Error(errorResponse.message.toString()))
         }
     }.flowOn(Dispatchers.IO)
 
-    fun deleteProduct(id: Int) = flow {
+    fun deleteSavedProduct(id: Int) = flow {
         try {
+            Log.d("ProductRepository", "deleteProduct called with id: $id")
             val response = apiService.deleteSavedProduct(id)
+            Log.d("ProductRepository", "deleteProduct response: $response")
             emit(Result.Success(response))
         } catch (e: HttpException) {
             val errorBody = e.response()?.errorBody()?.string()
             val errorResponse = Gson().fromJson(errorBody, ErrorResponse::class.java)
+            Log.e("ProductRepository", "deleteProduct error: ${e.message}", e)
             emit(Result.Error(errorResponse.message.toString()))
         }
     }.flowOn(Dispatchers.IO)
@@ -124,12 +128,11 @@ class ProductRepository private constructor(
         @Volatile
         private var instance: ProductRepository? = null
         fun getInstance(
-            savedProductsDatabase: SavedProductsDatabase,
             historyDatabase: HistoryDatabase,
             apiService: APIService
         ) =
             instance ?: synchronized(this) {
-                instance ?: ProductRepository(savedProductsDatabase, historyDatabase, apiService)
+                instance ?: ProductRepository(historyDatabase, apiService)
             }.also { instance = it }
     }
 }

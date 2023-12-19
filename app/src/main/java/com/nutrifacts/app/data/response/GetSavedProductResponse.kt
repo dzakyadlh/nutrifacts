@@ -5,8 +5,8 @@ import com.google.gson.annotations.SerializedName
 
 data class GetSavedProductResponse(
 
-	@field:SerializedName("product")
-	val product: List<SavedProduct> = emptyList(),
+	@field:SerializedName("UserSaved")
+	val userSaved: List<UserSavedItem> = emptyList(),
 
 	@field:SerializedName("success")
 	val success: Boolean? = null,
@@ -15,7 +15,7 @@ data class GetSavedProductResponse(
 	val message: String? = null
 )
 
-data class SavedProduct(
+data class UserSavedItem(
 
 	@field:SerializedName("photoUrl")
 	val photoUrl: String? = null,
@@ -31,7 +31,7 @@ data class SavedProduct(
 
 	@PrimaryKey
 	@field:SerializedName("id")
-	val id: Int? = null,
+	val id: Int,
 
 	@field:SerializedName("barcode")
 	val barcode: String? = null

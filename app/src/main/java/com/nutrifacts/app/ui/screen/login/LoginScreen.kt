@@ -12,7 +12,12 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.ClickableText
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Visibility
+import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
@@ -32,6 +37,7 @@ import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -59,46 +65,54 @@ fun LoginScreen(
     val state = viewModel.state
     val context = LocalContext.current
     var loading by remember { mutableStateOf(false) }
+    var showPassword by remember {
+        mutableStateOf(false)
+    }
     LaunchedEffect(key1 = context) {
         userModel.let { user ->
             viewModel.validationEvents.collect { event ->
                 when (event) {
                     is LoginViewModel.ValidationEvent.success -> {
-                        viewModel.login(viewModel.emailInput, viewModel.passwordInput).collect { result ->
-                            if (result != null) {
-                                when (result) {
-                                    is Result.Loading -> {
-                                        loading = true
-                                    }
+                        viewModel.login(viewModel.emailInput, viewModel.passwordInput)
+                            .collect { result ->
+                                if (result != null) {
+                                    when (result) {
+                                        is Result.Loading -> {
+                                            loading = true
+                                        }
 
-                                    is Result.Success -> {
-                                        user.id = result.data.id
-                                        user.token = result.data.token
-                                        user.isLogin = true
-                                        viewModel.saveSession(user)
-                                        loading = false
-                                        Toast.makeText(
-                                            context,
-                                            "Login Successful",
-                                            Toast.LENGTH_SHORT
-                                        ).show()
-                                        navigateToHome()
-                                    }
+                                        is Result.Success -> {
+                                            user.id = result.data.id
+                                            user.token = result.data.token
+                                            user.isLogin = true
+                                            viewModel.saveSession(user)
+                                            loading = false
+                                            Toast.makeText(
+                                                context,
+                                                "Login Successful",
+                                                Toast.LENGTH_SHORT
+                                            ).show()
+                                            navigateToHome()
+                                        }
 
-                                    is Result.Error -> {
-                                        Toast.makeText(context, result.error, Toast.LENGTH_SHORT)
-                                            .show()
-                                        loading = false
+                                        is Result.Error -> {
+                                            Toast.makeText(
+                                                context,
+                                                result.error,
+                                                Toast.LENGTH_SHORT
+                                            )
+                                                .show()
+                                            loading = false
+                                        }
                                     }
                                 }
                             }
-                        }
                     }
                 }
             }
         }
     }
-    Box (modifier = modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+    Box(modifier = modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center,
@@ -137,8 +151,29 @@ fun LoginScreen(
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Password
                 ),
-                visualTransformation = PasswordVisualTransformation(),
-                label = { Text(text = stringResource(id = R.string.password)) }
+                visualTransformation = if (showPassword) {
+                    VisualTransformation.None
+                } else {
+                    PasswordVisualTransformation()
+                },
+                label = { Text(text = stringResource(id = R.string.password)) },
+                trailingIcon = {
+                    if (showPassword) {
+                        IconButton(onClick = { showPassword = false }) {
+                            Icon(
+                                imageVector = Icons.Filled.Visibility,
+                                contentDescription = "hide_password"
+                            )
+                        }
+                    } else {
+                        IconButton(onClick = { showPassword = true }) {
+                            Icon(
+                                imageVector = Icons.Filled.VisibilityOff,
+                                contentDescription = "hide_password"
+                            )
+                        }
+                    }
+                }
             )
             if (state.passwordError != null) {
                 Text(

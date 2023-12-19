@@ -14,5 +14,8 @@ data class GetUserByIdResponse(
 	val email: String? = null,
 
 	@field:SerializedName("username")
-	val username: String? = null
+	val username: String? = null,
+
+	@field:SerializedName("createdAt")
+	val createdAt: String? = null
 )

@@ -17,9 +17,9 @@
         android:enableOnBackInvokedCallback="true"
         android:fullBackupContent="@xml/backup_rules"
         android:hardwareAccelerated="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/ic_nutrifacts"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:roundIcon="@mipmap/ic_nutrifacts_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Nutrifacts"
         android:usesCleartextTraffic="true"
@@ -34,7 +34,7 @@
             android:exported="true"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.Nutrifacts">
+            android:theme="@style/Theme.Nutrifacts.Splash">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

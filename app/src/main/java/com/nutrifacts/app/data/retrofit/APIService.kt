@@ -42,12 +42,6 @@ interface APIService {
         @Path("id") id: Int
     ): GetUserByIdResponse
 
-    //    @FormUrlEncoded
-//    @PUT("user/{id}")
-//    suspend fun editUser(
-//        @Path("id") id: String
-//    ): EditUserResponse
-
     @GET("product")
     suspend fun getAllProducts(
     ): GetAllProductResponse
@@ -62,12 +56,13 @@ interface APIService {
         @Path("barcode") barcode: String
     ): GetProductByBarcodeResponse
 
-    @GET("product/saved/{user_id}")
+    @GET("user/saved/{user_id}")
     suspend fun getSavedProduct(
         @Path("user_id") user_id: Int
     ): GetSavedProductResponse
 
-    @POST("product/saved")
+    @FormUrlEncoded
+    @POST("user/saved")
     suspend fun saveProduct(
         @Field("name") name: String,
         @Field("company") company: String,
@@ -76,7 +71,7 @@ interface APIService {
         @Field("user_id") user_id: Int,
     ): SaveProductResponse
 
-    @DELETE("product/saved/{id}")
+    @DELETE("user/saved/{id}")
     suspend fun deleteSavedProduct(
         @Path("id") id: Int
     ): DeleteSavedProductResponse
