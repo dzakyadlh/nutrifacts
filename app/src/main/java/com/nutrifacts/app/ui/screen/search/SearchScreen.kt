@@ -1,6 +1,5 @@
 package com.nutrifacts.app.ui.screen.search
 
-import android.util.Log
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
@@ -77,7 +76,6 @@ fun SearchScreen(
                         loading = false
                         val productData = product.data
                         items(items = productData, key = { it.id!! }) { data ->
-                            Log.d("success", "${data.id}")
                             SmallCard(
                                 barcode = data.barcode.toString(),
                                 name = data.name.toString(),

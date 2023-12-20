@@ -1,8 +1,10 @@
 package com.nutrifacts.app.data.retrofit
 
 import com.nutrifacts.app.data.response.DeleteSavedProductResponse
+import com.nutrifacts.app.data.response.GetAllNewsResponse
 import com.nutrifacts.app.data.response.GetAllProductResponse
 import com.nutrifacts.app.data.response.GetAllUserResponse
+import com.nutrifacts.app.data.response.GetNewsByIdResponse
 import com.nutrifacts.app.data.response.GetProductByBarcodeResponse
 import com.nutrifacts.app.data.response.GetProductByNameResponse
 import com.nutrifacts.app.data.response.GetSavedProductResponse
@@ -75,4 +77,12 @@ interface APIService {
     suspend fun deleteSavedProduct(
         @Path("id") id: Int
     ): DeleteSavedProductResponse
+
+    @GET("news")
+    suspend fun getAllNews(): GetAllNewsResponse
+
+    @GET("news/{id}")
+    suspend fun getNewsById(
+        @Path("id") id: Int
+    ): GetNewsByIdResponse
 }

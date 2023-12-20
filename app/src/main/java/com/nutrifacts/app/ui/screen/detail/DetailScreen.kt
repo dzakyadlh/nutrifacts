@@ -178,7 +178,7 @@ fun DetailScreen(
                                             Column {
                                                 Text(
                                                     text = stringResource(id = R.string.nutrition_facts),
-                                                    style = MaterialTheme.typography.headlineMedium
+                                                    style = MaterialTheme.typography.titleSmall
                                                 )
                                                 Divider(
                                                     modifier = Modifier
@@ -246,6 +246,13 @@ fun DetailScreen(
                                                     label = stringResource(id = R.string.iron),
                                                     value = productData.iron
                                                 )
+                                                Divider(
+                                                    modifier = Modifier
+                                                        .fillMaxWidth()
+                                                        .padding(vertical = 8.dp)
+                                                        .height(1.dp),
+                                                    color = MaterialTheme.colorScheme.onSurface
+                                                )
                                             }
                                             Spacer(modifier = modifier.height(16.dp))
                                             Row(
@@ -255,7 +262,7 @@ fun DetailScreen(
                                                 Text(
                                                     text = "Nutrilevel",
                                                     style = MaterialTheme.typography.titleMedium,
-                                                    color = MaterialTheme.colorScheme.tertiary
+                                                    color = MaterialTheme.colorScheme.primary
                                                 )
                                                 if (productData.nutritionLevel != null && productData.nutritionLevel != "") {
                                                     Text(

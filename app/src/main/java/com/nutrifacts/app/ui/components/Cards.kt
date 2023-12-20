@@ -97,11 +97,13 @@ fun SmallCard(
 
 @Composable
 fun BigCard(
+    newsId: Int,
     title: String,
     source: String,
     description: String,
     modifier: Modifier = Modifier,
-    photoUrl: String? = null
+    photoUrl: String? = null,
+    navigateToNews: (Int) -> Unit
 ) {
     OutlinedCard(
         elevation = CardDefaults.cardElevation(
@@ -113,7 +115,7 @@ fun BigCard(
         modifier = modifier
             .fillMaxWidth()
             .height(300.dp)
-            .clickable { }
+            .clickable { navigateToNews(newsId) }
     ) {
         Column(modifier = modifier.fillMaxWidth()) {
             AsyncImage(

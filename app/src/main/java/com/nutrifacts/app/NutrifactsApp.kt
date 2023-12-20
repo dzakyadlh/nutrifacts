@@ -46,6 +46,7 @@ import com.nutrifacts.app.ui.screen.history.HistoryScreen
 import com.nutrifacts.app.ui.screen.home.HomeScreen
 import com.nutrifacts.app.ui.screen.landing.LandingScreen
 import com.nutrifacts.app.ui.screen.login.LoginScreen
+import com.nutrifacts.app.ui.screen.news.NewsScreen
 import com.nutrifacts.app.ui.screen.notifications.NotificationsScreen
 import com.nutrifacts.app.ui.screen.profile.ProfileScreen
 import com.nutrifacts.app.ui.screen.saved.SavedScreen
@@ -98,7 +99,11 @@ fun NutrifactsApp(
                     navigateToLogin = { navController.navigate(Screen.Login.route) })
             }
             composable(Screen.Home.route) {
-                HomeScreen()
+                HomeScreen(navigateToNews = { newsId ->
+                    navController.navigate(
+                        Screen.News.createRoute(newsId)
+                    )
+                })
             }
             composable(Screen.Search.route) {
                 SearchScreen(navigateToDetail = { barcode ->
@@ -119,7 +124,13 @@ fun NutrifactsApp(
             }
             composable(Screen.Scanner.route) {
                 ScannerActivity()
-//                ScannerScreen(navController = navController)
+            }
+            composable(
+                route = Screen.News.route,
+                arguments = listOf(navArgument("newsId") { type = NavType.IntType })
+            ) {
+                val newsId = it.arguments?.getInt("newsId") ?: -1L
+                NewsScreen(newsId = newsId.toInt())
             }
             composable(
                 route = Screen.Detail.route,
@@ -163,14 +174,21 @@ fun TopAppBar(
             title = {
                 if (currentRoute != Screen.Detail.route) {
                     Text(
-                        text = currentRoute.toString(),
+                        text = "Nutrifacts",
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
+                        style = MaterialTheme.typography.titleMedium
+                    )
+                } else if (currentRoute == Screen.News.route) {
+                    Text(
+                        text = "News",
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
                         style = MaterialTheme.typography.titleMedium
                     )
                 } else {
                     Text(
-                        text = "Nutrifacts",
+                        text = currentRoute.toString(),
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
                         style = MaterialTheme.typography.titleMedium

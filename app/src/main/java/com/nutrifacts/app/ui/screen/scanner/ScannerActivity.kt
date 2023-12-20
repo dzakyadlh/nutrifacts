@@ -3,7 +3,6 @@ package com.nutrifacts.app.ui.screen.scanner
 import android.Manifest
 import android.content.pm.PackageManager
 import android.os.Bundle
-import android.util.Log
 import android.util.Size
 import android.widget.Toast
 import androidx.activity.ComponentActivity
@@ -125,23 +124,14 @@ class ScannerActivity : ComponentActivity() {
                                         .fillMaxSize()
                                 )
                                 LaunchedEffect(barcode) {
-                                    Toast.makeText(
-                                        context,
-                                        "Barcode: $barcode",
-                                        Toast.LENGTH_SHORT
-                                    )
-                                        .show()
-                                    Log.d("Scanner", "Barcode: $barcode")
-                                    viewModel.getProductByBarcode(barcode)
                                     viewModel.result.collect { result ->
-                                        if (result != null) {
+                                        if (result != null && barcode != "" && barcode != null) {
                                             when (result) {
                                                 is Result.Loading -> {
-
+                                                    viewModel.getProductByBarcode(barcode)
                                                 }
 
                                                 is Result.Success -> {
-                                                    Log.d("Scanner", "Navigate to detail")
                                                     navController.navigate(
                                                         Screen.Detail.createRoute(barcode)
                                                     )

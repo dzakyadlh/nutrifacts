@@ -7,6 +7,7 @@ import com.nutrifacts.app.data.repository.ProductRepository
 import com.nutrifacts.app.data.response.Product
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
 
 class ScannerViewModel(private val repository: ProductRepository) : ViewModel() {
@@ -17,9 +18,13 @@ class ScannerViewModel(private val repository: ProductRepository) : ViewModel() 
 
     fun getProductByBarcode(barcode: String) {
         viewModelScope.launch {
-            repository.getProductByBarcode(barcode).collect { result ->
-                _result.value = result
-            }
+            repository.getProductByBarcode(barcode)
+                .catch {
+                    _result.value = Result.Error(it.message.toString())
+                }
+                .collect { result ->
+                    _result.value = result
+                }
         }
     }
 }
