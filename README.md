@@ -25,7 +25,7 @@ Nutrifacts is a food product health app designed to solve the perplexing task of
 
 ***You can Install and test latest Next Hotel app from below 👇***
 
-[![NEXTHOTEL](https://img.shields.io/badge/NextHotel✅-APK-red.svg?style=for-the-badge&logo=android)](https://github.com/dzakyadlh/nutrifacts/releases/download/v1.0.0/app-debug.apk)
+[![Nutrifacts](https://img.shields.io/badge/Nutrifacts✅-APK-red.svg?style=for-the-badge&logo=android)](https://github.com/dzakyadlh/nutrifacts/releases/download/v1.0.0/app-debug.apk)
 
 
 ## Getting started
@@ -69,10 +69,13 @@ Clone the repository on your machine. Open the project on your IDE and run it.
 ## 📸 Screenshots
 ||||
 |:----------------------------------------:|:-----------------------------------------:|:-----------------------------------------: |
-| ![](media/lightmode_landing.png) | ![](media/lightmode_login.png) | ![](media/lightmode_signup.png) | ![](media/lightmode_home.png) | ![](media/lightmode_search.png)
-| ![](media/lightmode_history.png) | ![](media/lightmode_scanner.png) | ![](media/lightmode_detail.png) | ![](media/lightmode_profile.png) | ![](media/lightmode_account.png)
-| ![](media/darkmode_landing.png) | ![](media/darkmode_login.png) | ![](media/darkmode_signup.png) | ![](media/darkmode_home.png) | ![](media/darkmode_search.png)
-| ![](media/darkmode_history.png) | ![](media/darkmode_scanner.png) | ![](media/darkmode_detail.png) | ![](media/darkmode_profile.png) | ![](media/darkmode_account.png)
+| ![](media/lightmode_landing.png) | ![](media/lightmode_login.png) | ![](media/lightmode_signup.png) 
+| ![](media/lightmode_home.png) | ![](media/lightmode_search.png) | ![](media/lightmode_history.png)
+| ![](media/lightmode_scanner.png) | ![](media/lightmode_detail.png) | ![](media/lightmode_profile.png) 
+| ![](media/lightmode_account.png) | ![](media/darkmode_landing.png) | ![](media/darkmode_login.png) 
+| ![](media/darkmode_signup.png) | ![](media/darkmode_home.png) | ![](media/darkmode_search.png)
+| ![](media/darkmode_history.png) | ![](media/darkmode_scanner.png) | ![](media/darkmode_detail.png) 
+| ![](media/darkmode_profile.png) | ![](media/darkmode_account.png)
 
 ## Built With 🛠
 - [Kotlin](https://kotlinlang.org/) - First class and official programming language for Android development.
