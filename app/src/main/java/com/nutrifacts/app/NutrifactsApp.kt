@@ -172,7 +172,7 @@ fun TopAppBar(
     if (currentRoute != Screen.Landing.route && currentRoute != Screen.Login.route && currentRoute != Screen.Signup.route && currentRoute != Screen.Scanner.route) {
         androidx.compose.material3.TopAppBar(
             title = {
-                if (currentRoute != Screen.Detail.route) {
+                if (currentRoute == Screen.Detail.route) {
                     Text(
                         text = "Nutrifacts",
                         maxLines = 1,

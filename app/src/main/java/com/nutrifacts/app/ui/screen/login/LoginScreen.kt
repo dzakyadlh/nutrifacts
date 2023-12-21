@@ -13,6 +13,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.ClickableText
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Lock
+import androidx.compose.material.icons.filled.Mail
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -127,6 +129,13 @@ fun LoginScreen(
                 onValueChange = { viewModel.onEvent(LoginFormEvent.EmailChanged(it)) },
                 label = { Text(text = stringResource(id = R.string.email)) },
                 isError = state.emailError != null,
+                leadingIcon = {
+                    Icon(
+                        imageVector = Icons.Filled.Mail,
+                        contentDescription = "email logo"
+                    )
+                },
+                singleLine = true,
                 modifier = Modifier.fillMaxWidth(),
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Email
@@ -147,6 +156,13 @@ fun LoginScreen(
                 value = state.password,
                 onValueChange = { viewModel.onEvent(LoginFormEvent.PasswordChanged(it)) },
                 isError = state.passwordError != null,
+                leadingIcon = {
+                    Icon(
+                        imageVector = Icons.Filled.Lock,
+                        contentDescription = "password logo"
+                    )
+                },
+                singleLine = true,
                 modifier = Modifier.fillMaxWidth(),
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Password

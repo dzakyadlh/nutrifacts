@@ -133,6 +133,7 @@ fun BigCard(
             Text(
                 text = description,
                 style = MaterialTheme.typography.bodyMedium,
+                maxLines = 3,
                 modifier = modifier.padding(horizontal = 16.dp)
             )
         }

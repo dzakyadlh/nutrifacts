@@ -14,6 +14,9 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.ClickableText
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AlternateEmail
+import androidx.compose.material.icons.filled.Lock
+import androidx.compose.material.icons.filled.Mail
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.Checkbox
@@ -121,6 +124,13 @@ fun SignupScreen(
                 onValueChange = { viewModel.onEvent(SignupFormEvent.EmailChanged(it)) },
                 label = { Text(text = stringResource(id = R.string.email)) },
                 isError = state.emailError != null,
+                leadingIcon = {
+                    Icon(
+                        imageVector = Icons.Filled.Mail,
+                        contentDescription = "email logo"
+                    )
+                },
+                singleLine = true,
                 modifier = Modifier.fillMaxWidth(),
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Email
@@ -141,6 +151,13 @@ fun SignupScreen(
                 value = state.username,
                 onValueChange = { viewModel.onEvent(SignupFormEvent.UsernameChanged(it)) },
                 isError = state.usernameError != null,
+                leadingIcon = {
+                    Icon(
+                        imageVector = Icons.Filled.AlternateEmail,
+                        contentDescription = "username logo"
+                    )
+                },
+                singleLine = true,
                 modifier = Modifier.fillMaxWidth(),
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Text
@@ -162,6 +179,13 @@ fun SignupScreen(
                 value = state.password,
                 onValueChange = { viewModel.onEvent(SignupFormEvent.PasswordChanged(it)) },
                 isError = state.passwordError != null,
+                leadingIcon = {
+                    Icon(
+                        imageVector = Icons.Filled.Lock,
+                        contentDescription = "password logo"
+                    )
+                },
+                singleLine = true,
                 modifier = Modifier.fillMaxWidth(),
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Password
@@ -205,6 +229,13 @@ fun SignupScreen(
                 value = state.repeatedPassword,
                 onValueChange = { viewModel.onEvent(SignupFormEvent.RepeatPasswordChanged(it)) },
                 isError = state.repeatedPasswordError != null,
+                leadingIcon = {
+                    Icon(
+                        imageVector = Icons.Filled.Lock,
+                        contentDescription = "repeat password logo"
+                    )
+                },
+                singleLine = true,
                 modifier = Modifier.fillMaxWidth(),
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Password
