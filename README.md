@@ -7,9 +7,6 @@
 This repository is the Capstone Project in [Bangkit Academy](https://grow.google/intl/id_id/bangkit/) 2023. 
 Nutrifacts is a food product health app designed to solve the perplexing task of making informed nutritional decisions. We seek to empower people with the ability to effortlessly decode the nutritional content and health level of any product through a simple barcode scan anywhere, anytime..<br><br>
  [![Platform](https://img.shields.io/badge/platform-Android-green.svg)](http://developer.android.com/index.html)<br>
- 
-## Demo Video 
-[![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/cvlKvAMvqIY/0.jpg)](https://www.youtube.com/watch?v=cvlKvAMvqIY)
 
 ## Our Team
 | Name                            | Bangkit-ID    | Path               |
