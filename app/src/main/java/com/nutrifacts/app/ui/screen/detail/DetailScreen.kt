@@ -63,6 +63,9 @@ fun DetailScreen(
     var loading by remember {
         mutableStateOf(false)
     }
+    var insertUserHistory by remember {
+        mutableStateOf(true)
+    }
 
     val user =
         UserPreference.getInstance(LocalContext.current.dataStore).getSession().collectAsState(
@@ -70,7 +73,9 @@ fun DetailScreen(
         ).value
 
     viewModel.result.collectAsState(initial = Result.Loading).value.let { product ->
-        Box(modifier = modifier.fillMaxSize().verticalScroll(rememberScrollState())) {
+        Box(modifier = modifier
+            .fillMaxSize()
+            .verticalScroll(rememberScrollState())) {
             when (product) {
                 is Result.Loading -> {
                     loading = true
@@ -80,6 +85,19 @@ fun DetailScreen(
                 is Result.Success -> {
                     val productData = product.data
                     Log.d("Detail", "$productData")
+                    if (insertUserHistory){
+                        viewModel.insertHistory(
+                            History(
+                                name = productData.name.toString(),
+                                company = productData.company.toString(),
+                                photoUrl = productData.photoUrl.toString(),
+                                barcode = productData.barcode.toString(),
+                                user_id = user.id,
+                                dateAdded = formattedDate
+                            )
+                        )
+                        insertUserHistory = false
+                    }
                     viewModel.saved.collectAsState(initial = Result.Loading).value.let { savedProduct ->
                         if (user.id != 0 && user.id != null) {
                             when (savedProduct) {
@@ -92,16 +110,6 @@ fun DetailScreen(
                                     loading = false
                                     val savedProductData = savedProduct.data
                                     Log.d("Detail", "$savedProductData")
-                                    viewModel.insertHistory(
-                                        History(
-                                            name = productData.name.toString(),
-                                            company = productData.company.toString(),
-                                            photoUrl = productData.photoUrl.toString(),
-                                            barcode = productData.barcode.toString(),
-                                            user_id = user.id,
-                                            dateAdded = formattedDate
-                                        )
-                                    )
                                     for (item in savedProductData) {
                                         if (item.barcode == productData.barcode) {
                                             isSaved = true
