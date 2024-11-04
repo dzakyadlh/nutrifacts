@@ -20,7 +20,7 @@ Nutrifacts is a food product health app designed to solve the perplexing task of
 
 # Application Install
 
-***You can Install and test latest Next Hotel app from below 👇***
+***You can Install and test latest Nutrifacts app from below 👇***
 
 [![Nutrifacts](https://img.shields.io/badge/Nutrifacts✅-APK-red.svg?style=for-the-badge&logo=android)](https://github.com/dzakyadlh/nutrifacts/releases/download/v1.0.0/app-debug.apk)
 
